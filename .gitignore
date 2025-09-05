@@ -1,0 +1,351 @@
+# =============================================================================
+# .NET Core / .NET 5+ / .NET 9.0 - Clean Architecture Project
+# Comprehensive .gitignore with Security Measures
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SECURITY FIRST - Never commit these sensitive files!
+# -----------------------------------------------------------------------------
+# API Keys, Secrets, and Sensitive Configuration
+**/appsettings*.json
+**/appsettings.*.json
+!**/appsettings.json.example
+!**/appsettings.Development.json.example
+
+# Environment Variables
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+*.env
+!*.env.example
+
+# User Secrets
+**/secrets.json
+**/user-secrets-id
+
+# Private Keys and Certificates
+*.pfx
+*.p12
+*.key
+*.crt
+*.cer
+*.pem
+*.der
+id_rsa
+id_dsa
+*.pub
+
+# Azure and Cloud Keys
+**/appsettings.azure.json
+**/azure-keyvault.json
+
+# Database Connection Strings and Sensitive Data
+**/connectionstrings.json
+**/database.json
+
+# OAuth and Authentication Secrets
+**/oauth.json
+**/auth.json
+**/jwt.json
+
+# -----------------------------------------------------------------------------
+# BUILD ARTIFACTS - Generated files that shouldn't be committed
+# -----------------------------------------------------------------------------
+# Binaries
+[Bb]in/
+[Oo]bj/
+**/bin/
+**/obj/
+
+# Build outputs
+**/build/
+**/dist/
+**/.vs/
+**/packages/
+
+# .NET Core / .NET 5+
+*.user
+*.suo
+*.cache
+*.log
+*.tmp
+*.temp
+*.swp
+*.bak
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+**/packages/
+**/nuget/
+**/NuGet/
+
+# MSBuild
+*.msbuild.log
+*.msbuild.binlog
+
+# Roslyn cache
+*.ide/
+
+# -----------------------------------------------------------------------------
+# VISUAL STUDIO & IDE FILES
+# -----------------------------------------------------------------------------
+# Visual Studio
+.vs/
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.cache
+
+# Visual Studio Code
+.vscode/
+!.vscode/extensions.json
+!.vscode/launch.json.example
+!.vscode/tasks.json.example
+
+# Rider
+.idea/
+*.sln.iml
+
+# -----------------------------------------------------------------------------
+# OPERATING SYSTEM FILES
+# -----------------------------------------------------------------------------
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.stackdump
+*.lnk
+*.sys
+*.dll.bak
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# -----------------------------------------------------------------------------
+# DATABASE & DATA FILES
+# -----------------------------------------------------------------------------
+# SQL Server
+*.mdf
+*.ldf
+*.ndf
+*.bak
+*.trn
+
+# SQLite
+*.db
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Entity Framework
+**/Migrations/*.cs
+**/Migrations/*.Designer.cs
+!**/Migrations/InitialCreate.cs
+
+# Database backups
+*.bak
+*.backup
+*.dmp
+
+# -----------------------------------------------------------------------------
+# LOGS & DEBUG FILES
+# -----------------------------------------------------------------------------
+# Application Logs
+logs/
+**/logs/
+*.log
+*.log.*
+**/LogFiles/
+
+# Debug files
+*.pdb
+*.pdb.meta
+*.dbg
+*.diag
+
+# Crash dumps
+*.dmp
+*.mdmp
+*.hdmp
+
+# -----------------------------------------------------------------------------
+# TESTING & COVERAGE
+# -----------------------------------------------------------------------------
+# Test Results
+TestResults/
+**/TestResults/
+*.trx
+*.testsettings
+*.testResults.xml
+
+# Coverage Reports
+coverage/
+**/coverage/
+*.coverage
+*.coveragexml
+*.opencover.xml
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+
+# xUnit
+*.xunit
+
+# -----------------------------------------------------------------------------
+# DOCUMENTATION & TEMP FILES
+# -----------------------------------------------------------------------------
+# Documentation builds
+docs/_build/
+**/docs/_build/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
+*.orig
+*.rej
+
+# -----------------------------------------------------------------------------
+# NODE.JS (if using any frontend tools)
+# -----------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# -----------------------------------------------------------------------------
+# DOCKER
+# -----------------------------------------------------------------------------
+.dockerignore
+docker-compose.override.yml
+**/docker-compose.override.yml
+
+# -----------------------------------------------------------------------------
+# AZURE & CLOUD
+# -----------------------------------------------------------------------------
+# Azure Functions
+bin
+obj
+appsettings.json
+local.settings.json
+
+# Azure Web Apps
+deployment/
+.deploy/
+
+# AWS
+.aws/
+**/aws/
+*.pem
+
+# -----------------------------------------------------------------------------
+# PACKAGE MANAGEMENT
+# -----------------------------------------------------------------------------
+# Bower
+bower_components/
+
+# Composer
+vendor/
+
+# -----------------------------------------------------------------------------
+# WEB ASSETS
+# -----------------------------------------------------------------------------
+# Web artifacts
+wwwroot/lib/
+wwwroot/dist/
+**/wwwroot/lib/
+**/wwwroot/dist/
+
+# -----------------------------------------------------------------------------
+# TOOLS & UTILITIES
+# -----------------------------------------------------------------------------
+# Tools
+.tools/
+**/tools/
+*.exe
+*.dll
+!**/tools/example.exe
+
+# -----------------------------------------------------------------------------
+# USER SPECIFIC
+# -----------------------------------------------------------------------------
+# User-specific files
+*.user
+*.suo
+*.cache
+*.log
+
+# -----------------------------------------------------------------------------
+# MISCELLANEOUS
+# -----------------------------------------------------------------------------
+# Editor directories and files
+.idea/
+.vscode/settings.json
+.history/
+
+# Local configuration
+local.json
+local.config
+*.local
+
+# Temporary projects
+temp/
+tmp/
+
+# Archive files
+*.7z
+*.rar
+*.zip
+*.tar.gz
+*.tgz
+
+# -----------------------------------------------------------------------------
+# CUSTOM PROJECT SPECIFIC (Add your project-specific ignores here)
+# -----------------------------------------------------------------------------
+# Add any project-specific files that should be ignored
+# Example: Internal documentation, local configs, etc.
+
+# -----------------------------------------------------------------------------
+# SECURITY REMINDERS (DO NOT REMOVE THESE COMMENTS)
+# -----------------------------------------------------------------------------
+# Remember to:
+# 1. Never commit API keys, passwords, or secrets
+# 2. Use environment variables for sensitive data
+# 3. Use .env files that are gitignored
+# 4. Rotate any exposed secrets immediately
+# 5. Use tools like Azure Key Vault or AWS Secrets Manager for production
+# -----------------------------------------------------------------------------

@@ -1,0 +1,33 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=BBBApplicationDb;Trusted_Connection=True;TrustServerCertificate=True"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "Microsoft.AspNetCore": "Information",
+      "Microsoft.EntityFrameworkCore.Database.Command": "Information"
+    },
+    "Console": {
+      "IncludeScopes": true
+    }
+  },
+  "Jwt": {
+    "Key": "your-development-jwt-secret-key-at-least-256-bits-long",
+    "Issuer": "https://localhost:5001",
+    "Audience": "https://localhost:5001",
+    "ExpiryMinutes": 480
+  },
+  "Security": {
+    "CorsOrigins": ["https://localhost:3000", "https://localhost:5001", "http://localhost:3000", "http://localhost:5000"],
+    "RateLimitRequestsPerMinute": 1000,
+    "RateLimitBurstSize": 100
+  },
+  "Features": {
+    "EnableSwagger": true,
+    "EnableHangfire": true,
+    "EnableRedisCache": false,
+    "DeveloperMode": true,
+    "EnableDetailedErrors": true
+  }
+}

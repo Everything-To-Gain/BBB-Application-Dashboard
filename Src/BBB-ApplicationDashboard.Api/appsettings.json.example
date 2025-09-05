@@ -1,0 +1,41 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=BBBApplicationDb;Trusted_Connection=True;TrustServerCertificate=True"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "Jwt": {
+    "Key": "your-super-secure-jwt-secret-key-here-at-least-256-bits",
+    "Issuer": "https://yourdomain.com",
+    "Audience": "https://yourdomain.com",
+    "ExpiryMinutes": 60
+  },
+  "Email": {
+    "SmtpHost": "smtp.gmail.com",
+    "SmtpPort": 587,
+    "Username": "your-email@gmail.com",
+    "Password": "your-app-password",
+    "FromEmail": "noreply@yourdomain.com",
+    "FromName": "BBB Application"
+  },
+  "ExternalServices": {
+    "SendGridApiKey": "your-sendgrid-api-key",
+    "StripePublishableKey": "pk_test_your_stripe_publishable_key",
+    "StripeSecretKey": "sk_test_your_stripe_secret_key"
+  },
+  "Security": {
+    "CorsOrigins": ["https://localhost:3000", "https://localhost:5001"],
+    "RateLimitRequestsPerMinute": 100,
+    "RateLimitBurstSize": 20
+  },
+  "Features": {
+    "EnableSwagger": true,
+    "EnableHangfire": false,
+    "EnableRedisCache": false
+  }
+}
