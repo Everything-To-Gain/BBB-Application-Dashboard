@@ -1,0 +1,775 @@
+<div class="form-card stack-space-24">
+  <form
+    [formGroup]="accreditationForm"
+    (ngSubmit)="onSubmit()"
+    class="stack lead-form-container"
+    novalidate
+  >
+    <h3 class="bds-h3 text-size-50">Learn more about BBB Accreditation</h3>
+    <p class="bds-body stack-space-10">
+      Your local BBB will use this information to contact you via phone or email
+      to learn more about your business.
+    </p>
+    <p class="bds-body stack-space-10">
+      Accredited businesses pay an annual dues investment.
+    </p>
+
+    <!-- Business Information Section -->
+    <div class="bds-form-group">
+      <label for="businessName">Business Name *</label>
+      <input
+        class="bds-text-input"
+        id="businessName"
+        formControlName="businessName"
+        autocomplete="organization"
+        name="businessName"
+      />
+      <div class="bds-error" *ngIf="getFieldError('businessName')">
+        {{ getFieldError("businessName") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="doingBusinessAs">Doing Business As (DBA)</label>
+      <input
+        class="bds-text-input"
+        id="doingBusinessAs"
+        formControlName="doingBusinessAs"
+        autocomplete="organization"
+        name="doingBusinessAs"
+      />
+    </div>
+
+    <div class="bds-form-group">
+      <label for="businessAddress">Business Address *</label>
+      <input
+        class="bds-text-input"
+        id="businessAddress"
+        formControlName="businessAddress"
+        autocomplete="street-address"
+        name="businessAddress"
+      />
+      <div class="bds-error" *ngIf="getFieldError('businessAddress')">
+        {{ getFieldError("businessAddress") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="businessState">Business State *</label>
+      <select
+        class="bds-text-input"
+        id="businessState"
+        formControlName="businessState"
+        name="businessState"
+      >
+        <option value="">Select State</option>
+        <option *ngFor="let state of states" [value]="state">
+          {{ state }}
+        </option>
+      </select>
+      <div class="bds-error" *ngIf="getFieldError('businessState')">
+        {{ getFieldError("businessState") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="businessCity">Business City *</label>
+      <input
+        class="bds-text-input"
+        id="businessCity"
+        formControlName="businessCity"
+        autocomplete="address-level2"
+        name="businessCity"
+      />
+      <div class="bds-error" *ngIf="getFieldError('businessCity')">
+        {{ getFieldError("businessCity") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="businessZip">Business Zip *</label>
+      <input
+        class="bds-text-input"
+        id="businessZip"
+        formControlName="businessZip"
+        autocomplete="postal-code"
+        name="businessZip"
+      />
+      <div class="bds-error" *ngIf="getFieldError('businessZip')">
+        {{ getFieldError("businessZip") }}
+      </div>
+    </div>
+
+    <!-- Mailing Address Section -->
+    <div class="bds-form-group">
+      <label for="mailingAddress">Mailing Address</label>
+      <input
+        class="bds-text-input"
+        id="mailingAddress"
+        formControlName="mailingAddress"
+        autocomplete="street-address"
+        name="mailingAddress"
+      />
+    </div>
+
+    <div class="bds-form-group">
+      <label for="contactState">Contact State</label>
+      <select
+        class="bds-text-input"
+        id="contactState"
+        formControlName="contactState"
+        name="contactState"
+      >
+        <option value="">Select State</option>
+        <option *ngFor="let state of states" [value]="state">
+          {{ state }}
+        </option>
+      </select>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="contactCity">Contact City *</label>
+      <input
+        class="bds-text-input"
+        id="contactCity"
+        formControlName="contactCity"
+        autocomplete="address-level2"
+        name="contactCity"
+      />
+      <div class="bds-error" *ngIf="getFieldError('contactCity')">
+        {{ getFieldError("contactCity") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="contactZip">Contact Zip *</label>
+      <input
+        class="bds-text-input"
+        id="contactZip"
+        formControlName="contactZip"
+        autocomplete="postal-code"
+        name="contactZip"
+      />
+      <div class="bds-error" *ngIf="getFieldError('contactZip')">
+        {{ getFieldError("contactZip") }}
+      </div>
+    </div>
+
+    <!-- Contact Information Section -->
+    <div class="bds-form-group">
+      <label for="primaryBusinessPhone">Primary Business Phone # *</label>
+      <input
+        class="bds-text-input"
+        id="primaryBusinessPhone"
+        formControlName="primaryBusinessPhone"
+        autocomplete="tel"
+        type="tel"
+        name="primaryBusinessPhone"
+      />
+      <div class="bds-error" *ngIf="getFieldError('primaryBusinessPhone')">
+        {{ getFieldError("primaryBusinessPhone") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="primaryBusinessEmail">Primary Business Email *</label>
+      <input
+        class="bds-text-input"
+        id="primaryBusinessEmail"
+        formControlName="primaryBusinessEmail"
+        autocomplete="email"
+        type="email"
+        name="primaryBusinessEmail"
+      />
+      <div class="bds-error" *ngIf="getFieldError('primaryBusinessEmail')">
+        {{ getFieldError("primaryBusinessEmail") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="requestQuoteEmail"
+        >Request a Quote Email (If different from Business Email)</label
+      >
+      <input
+        class="bds-text-input"
+        id="requestQuoteEmail"
+        formControlName="requestQuoteEmail"
+        autocomplete="email"
+        type="email"
+        name="requestQuoteEmail"
+      />
+    </div>
+
+    <!-- Primary Contact Section -->
+    <div class="bds-form-group">
+      <label for="primaryContactName">Primary Contact (First, Last) *</label>
+      <input
+        class="bds-text-input"
+        id="primaryContactName"
+        formControlName="primaryContactName"
+        autocomplete="name"
+        name="primaryContactName"
+      />
+      <div class="bds-error" *ngIf="getFieldError('primaryContactName')">
+        {{ getFieldError("primaryContactName") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="primaryTitle">Primary Title *</label>
+      <input
+        class="bds-text-input"
+        id="primaryTitle"
+        formControlName="primaryTitle"
+        name="primaryTitle"
+      />
+      <div class="bds-error" *ngIf="getFieldError('primaryTitle')">
+        {{ getFieldError("primaryTitle") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="primaryDateOfBirth">Primary's Date of Birth *</label>
+      <input
+        class="bds-text-input"
+        id="primaryDateOfBirth"
+        formControlName="primaryDateOfBirth"
+        type="date"
+        name="primaryDateOfBirth"
+      />
+      <div class="bds-error" *ngIf="getFieldError('primaryDateOfBirth')">
+        {{ getFieldError("primaryDateOfBirth") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="primaryContactEmail">Primary Contact Email *</label>
+      <input
+        class="bds-text-input"
+        id="primaryContactEmail"
+        formControlName="primaryContactEmail"
+        autocomplete="email"
+        type="email"
+        name="primaryContactEmail"
+      />
+      <div class="bds-error" *ngIf="getFieldError('primaryContactEmail')">
+        {{ getFieldError("primaryContactEmail") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="primaryContactNumber">Primary Contact Number *</label>
+      <input
+        class="bds-text-input"
+        id="primaryContactNumber"
+        formControlName="primaryContactNumber"
+        autocomplete="tel"
+        type="tel"
+        name="primaryContactNumber"
+      />
+      <div class="bds-error" *ngIf="getFieldError('primaryContactNumber')">
+        {{ getFieldError("primaryContactNumber") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="preferredContactMethod">Preferred Contact Method *</label>
+      <div class="multi-select-container">
+        <div
+          class="multi-select-dropdown"
+          (click)="toggleDropdown('preferredContactMethod')"
+        >
+          <span
+            class="multi-select-placeholder"
+            *ngIf="!getSelectedOptions('preferredContactMethod').length"
+          >
+            Select contact methods...
+          </span>
+          <div
+            class="selected-options"
+            *ngIf="getSelectedOptions('preferredContactMethod').length"
+          >
+            <span
+              class="selected-option"
+              *ngFor="
+                let option of getSelectedOptions('preferredContactMethod')
+              "
+            >
+              {{ option }}
+              <button
+                type="button"
+                class="remove-option"
+                (click)="removeOption('preferredContactMethod', option, $event)"
+              >
+                ×
+              </button>
+            </span>
+          </div>
+          <span class="dropdown-arrow">▼</span>
+        </div>
+        <div
+          class="multi-select-options"
+          *ngIf="isDropdownOpen('preferredContactMethod')"
+        >
+          <div
+            class="multi-select-option"
+            *ngFor="let method of contactMethods"
+            (click)="selectOption('preferredContactMethod', method)"
+            [class.selected]="
+              isOptionSelected('preferredContactMethod', method)
+            "
+          >
+            {{ method }}
+          </div>
+        </div>
+      </div>
+      <div class="bds-error" *ngIf="getFieldError('preferredContactMethod')">
+        {{ getFieldError("preferredContactMethod") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="primaryDelegationTasks">Delegation of Tasks *</label>
+      <div class="multi-select-container">
+        <div
+          class="multi-select-dropdown"
+          (click)="toggleDropdown('primaryDelegationTasks')"
+        >
+          <span
+            class="multi-select-placeholder"
+            *ngIf="!getSelectedOptions('primaryDelegationTasks').length"
+          >
+            Select delegation tasks...
+          </span>
+          <div
+            class="selected-options"
+            *ngIf="getSelectedOptions('primaryDelegationTasks').length"
+          >
+            <span
+              class="selected-option"
+              *ngFor="
+                let option of getSelectedOptions('primaryDelegationTasks')
+              "
+            >
+              {{ option }}
+              <button
+                type="button"
+                class="remove-option"
+                (click)="removeOption('primaryDelegationTasks', option, $event)"
+              >
+                ×
+              </button>
+            </span>
+          </div>
+          <span class="dropdown-arrow">▼</span>
+        </div>
+        <div
+          class="multi-select-options"
+          *ngIf="isDropdownOpen('primaryDelegationTasks')"
+        >
+          <div
+            class="multi-select-option"
+            *ngFor="let task of delegationTasks"
+            (click)="selectOption('primaryDelegationTasks', task)"
+            [class.selected]="isOptionSelected('primaryDelegationTasks', task)"
+          >
+            {{ task }}
+          </div>
+        </div>
+      </div>
+      <div class="bds-error" *ngIf="getFieldError('primaryDelegationTasks')">
+        {{ getFieldError("primaryDelegationTasks") }}
+      </div>
+    </div>
+
+    <!-- Secondary Contact Section -->
+    <div class="bds-form-group">
+      <label for="secondaryContactName">Secondary Contact (First, Last)</label>
+      <input
+        class="bds-text-input"
+        id="secondaryContactName"
+        formControlName="secondaryContactName"
+        autocomplete="name"
+        name="secondaryContactName"
+      />
+    </div>
+
+    <div class="bds-form-group">
+      <label for="secondaryEmail">Secondary Email</label>
+      <input
+        class="bds-text-input"
+        id="secondaryEmail"
+        formControlName="secondaryEmail"
+        autocomplete="email"
+        type="email"
+        name="secondaryEmail"
+      />
+    </div>
+
+    <div class="bds-form-group">
+      <label for="secondaryPhone">Secondary Phone</label>
+      <input
+        class="bds-text-input"
+        id="secondaryPhone"
+        formControlName="secondaryPhone"
+        autocomplete="tel"
+        type="tel"
+        name="secondaryPhone"
+      />
+    </div>
+
+    <div class="bds-form-group">
+      <label for="secondaryDelegationTasks">Delegation of Tasks</label>
+      <div class="multi-select-container">
+        <div
+          class="multi-select-dropdown"
+          (click)="toggleDropdown('secondaryDelegationTasks')"
+        >
+          <span
+            class="multi-select-placeholder"
+            *ngIf="!getSelectedOptions('secondaryDelegationTasks').length"
+          >
+            Select delegation tasks...
+          </span>
+          <div
+            class="selected-options"
+            *ngIf="getSelectedOptions('secondaryDelegationTasks').length"
+          >
+            <span
+              class="selected-option"
+              *ngFor="
+                let option of getSelectedOptions('secondaryDelegationTasks')
+              "
+            >
+              {{ option }}
+              <button
+                type="button"
+                class="remove-option"
+                (click)="
+                  removeOption('secondaryDelegationTasks', option, $event)
+                "
+              >
+                ×
+              </button>
+            </span>
+          </div>
+          <span class="dropdown-arrow">▼</span>
+        </div>
+        <div
+          class="multi-select-options"
+          *ngIf="isDropdownOpen('secondaryDelegationTasks')"
+        >
+          <div
+            class="multi-select-option"
+            *ngFor="let task of delegationTasks"
+            (click)="selectOption('secondaryDelegationTasks', task)"
+            [class.selected]="
+              isOptionSelected('secondaryDelegationTasks', task)
+            "
+          >
+            {{ task }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business Details Section -->
+    <div class="bds-form-group">
+      <label for="website">Website (URL) *</label>
+      <input
+        class="bds-text-input"
+        id="website"
+        formControlName="website"
+        type="url"
+        name="website"
+      />
+      <div class="bds-error" *ngIf="getFieldError('website')">
+        {{ getFieldError("website") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="ein">EIN#</label>
+      <input class="bds-text-input" id="ein" formControlName="ein" name="ein" />
+    </div>
+
+    <div class="bds-form-group">
+      <label for="stateBusinessLicense">State Business License # *</label>
+      <input
+        class="bds-text-input"
+        id="stateBusinessLicense"
+        formControlName="stateBusinessLicense"
+        name="stateBusinessLicense"
+      />
+      <small class="bds-hint">Please include agency, & issue date</small>
+      <div class="bds-error" *ngIf="getFieldError('stateBusinessLicense')">
+        {{ getFieldError("stateBusinessLicense") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="professionalLicense">Professional License #</label>
+      <input
+        class="bds-text-input"
+        id="professionalLicense"
+        formControlName="professionalLicense"
+        name="professionalLicense"
+      />
+      <small class="bds-hint"
+        >Please include Agency, issue date & expiration. List all required for
+        your industry</small
+      >
+    </div>
+
+    <div class="bds-form-group">
+      <label for="businessDescription"
+        >Business Description of Services *</label
+      >
+      <textarea
+        class="bds-textarea"
+        id="businessDescription"
+        formControlName="businessDescription"
+        rows="4"
+        name="businessDescription"
+      ></textarea>
+      <div class="bds-error" *ngIf="getFieldError('businessDescription')">
+        {{ getFieldError("businessDescription") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="businessTypes"
+        >Types of Business (example: roofing, plumbing, hardscape) *</label
+      >
+      <input
+        class="bds-text-input"
+        id="businessTypes"
+        formControlName="businessTypes"
+        name="businessTypes"
+      />
+      <div class="bds-error" *ngIf="getFieldError('businessTypes')">
+        {{ getFieldError("businessTypes") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="businessEntityType">Type of Business Entity *</label>
+      <div class="multi-select-container">
+        <div
+          class="multi-select-dropdown"
+          (click)="toggleDropdown('businessEntityType')"
+        >
+          <span
+            class="multi-select-placeholder"
+            *ngIf="!getSelectedOptions('businessEntityType').length"
+          >
+            Select business entity types...
+          </span>
+          <div
+            class="selected-options"
+            *ngIf="getSelectedOptions('businessEntityType').length"
+          >
+            <span
+              class="selected-option"
+              *ngFor="let option of getSelectedOptions('businessEntityType')"
+            >
+              {{ option }}
+              <button
+                type="button"
+                class="remove-option"
+                (click)="removeOption('businessEntityType', option, $event)"
+              >
+                ×
+              </button>
+            </span>
+          </div>
+          <span class="dropdown-arrow">▼</span>
+        </div>
+        <div
+          class="multi-select-options"
+          *ngIf="isDropdownOpen('businessEntityType')"
+        >
+          <div
+            class="multi-select-option"
+            *ngFor="let entity of businessEntityTypes"
+            (click)="selectOption('businessEntityType', entity)"
+            [class.selected]="isOptionSelected('businessEntityType', entity)"
+          >
+            {{ entity }}
+          </div>
+        </div>
+      </div>
+      <div class="bds-error" *ngIf="getFieldError('businessEntityType')">
+        {{ getFieldError("businessEntityType") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="incorporationDetails"
+        >If incorporated, please include date of incorporation and the state
+        incorporated in.</label
+      >
+      <input
+        class="bds-text-input"
+        id="incorporationDetails"
+        formControlName="incorporationDetails"
+        name="incorporationDetails"
+      />
+    </div>
+
+    <div class="bds-form-group">
+      <label for="numberOfEmployees"># of Employees *</label>
+      <input
+        class="bds-text-input"
+        id="numberOfEmployees"
+        formControlName="numberOfEmployees"
+        type="number"
+        name="numberOfEmployees"
+      />
+      <div class="bds-error" *ngIf="getFieldError('numberOfEmployees')">
+        {{ getFieldError("numberOfEmployees") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="grossAnnualRevenue">Gross Annual Revenue *</label>
+      <input
+        class="bds-text-input"
+        id="grossAnnualRevenue"
+        formControlName="grossAnnualRevenue"
+        name="grossAnnualRevenue"
+      />
+      <small class="bds-hint">For internal records only</small>
+      <div class="bds-error" *ngIf="getFieldError('grossAnnualRevenue')">
+        {{ getFieldError("grossAnnualRevenue") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <label for="avgCustomersPerYear">Avg # of customers a year *</label>
+      <div class="multi-select-container">
+        <div
+          class="multi-select-dropdown"
+          (click)="toggleDropdown('avgCustomersPerYear')"
+        >
+          <span
+            class="multi-select-placeholder"
+            *ngIf="!getSelectedOptions('avgCustomersPerYear').length"
+          >
+            Select customer ranges...
+          </span>
+          <div
+            class="selected-options"
+            *ngIf="getSelectedOptions('avgCustomersPerYear').length"
+          >
+            <span
+              class="selected-option"
+              *ngFor="let option of getSelectedOptions('avgCustomersPerYear')"
+            >
+              {{ option }}
+              <button
+                type="button"
+                class="remove-option"
+                (click)="removeOption('avgCustomersPerYear', option, $event)"
+              >
+                ×
+              </button>
+            </span>
+          </div>
+          <span class="dropdown-arrow">▼</span>
+        </div>
+        <div
+          class="multi-select-options"
+          *ngIf="isDropdownOpen('avgCustomersPerYear')"
+        >
+          <div
+            class="multi-select-option"
+            *ngFor="let range of customerRanges"
+            (click)="selectOption('avgCustomersPerYear', range)"
+            [class.selected]="isOptionSelected('avgCustomersPerYear', range)"
+          >
+            {{ range }}
+          </div>
+        </div>
+      </div>
+      <div class="bds-error" *ngIf="getFieldError('avgCustomersPerYear')">
+        {{ getFieldError("avgCustomersPerYear") }}
+      </div>
+    </div>
+
+    <!-- Submission Section -->
+    <div class="bds-form-group">
+      <label for="submittedByName"
+        >Submitted by- Your Name & Title (First & Last) *</label
+      >
+      <input
+        class="bds-text-input"
+        id="submittedByName"
+        formControlName="submittedByName"
+        name="submittedByName"
+      />
+      <div class="bds-error" *ngIf="getFieldError('submittedByName')">
+        {{ getFieldError("submittedByName") }}
+      </div>
+    </div>
+
+    <div class="bds-form-group">
+      <div class="bds-fieldset">
+        <div class="bds-checkbox" data-enhanced="">
+          <input
+            type="checkbox"
+            id="certificationAgreement"
+            formControlName="certificationAgreement"
+            name="certificationAgreement"
+          />
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <rect
+              class="background"
+              x="2"
+              y="2"
+              width="20"
+              height="20"
+              rx="2"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            ></rect>
+            <path
+              class="checkmark"
+              d="M9 12l2 2 4-4"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+              stroke-dasharray="20"
+              stroke-dashoffset="20"
+            ></path>
+          </svg>
+          <label for="certificationAgreement"
+            >I certify that all the information is true and accurate to the best
+            of my knowledge & I am authorized to submit on behalf of the
+            business. *</label
+          >
+        </div>
+        <div class="bds-error" *ngIf="getFieldError('certificationAgreement')">
+          {{ getFieldError("certificationAgreement") }}
+        </div>
+      </div>
+    </div>
+
+    <div class="center submit-section">
+      <button class="bds-button" type="submit">Submit</button>
+    </div>
+
+    <div class="recaptcha-message">
+      This site is protected by reCAPTCHA and the Google
+      <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+      <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+    </div>
+  </form>
+</div>
