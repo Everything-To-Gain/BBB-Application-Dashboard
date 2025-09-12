@@ -1,11 +1,11 @@
-<div class="space-y-6">
+<div class="space-y-4 sm:space-y-6">
   <div hlmCard>
     <div hlmCardHeader>
-      <div hlmCardTitle class="text-xl text-primary">Business Contact Information</div>
+      <div hlmCardTitle class="text-lg sm:text-xl text-primary">Business Contact Information</div>
       <div hlmCardDescription>Primary business contact details and communication preferences.</div>
     </div>
-    <div hlmCardContent class="space-y-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div hlmCardContent class="space-y-3 sm:space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
         <hlm-form-field>
           <label hlmLabel>Primary Business Phone *</label>
           <input hlmInput placeholder="(555) 123-4567" formControlName="primaryBusinessPhone" />
@@ -52,8 +52,8 @@
       <div hlmCardTitle class="text-lg">Primary Contact Person</div>
       <div hlmCardDescription>Main point of contact for your business.</div>
     </div>
-    <div hlmCardContent class="space-y-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div hlmCardContent class="space-y-3 sm:space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
         <hlm-form-field>
           <label hlmLabel>Full Name *</label>
           <input hlmInput placeholder="John Doe" formControlName="primaryContactName" />
@@ -67,7 +67,7 @@
         </hlm-form-field>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
         <div>
           <label for="primaryDateOfBirth" hlmLabel class="px-1">Date of birth</label>
           <hlm-date-picker
@@ -97,7 +97,7 @@
         <hlm-error>Contact phone number is required</hlm-error>
       </hlm-form-field>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
         <hlm-form-field>
           <label hlmLabel>Preferred Contact Methods *</label>
           <brn-select
@@ -146,8 +146,8 @@
       <div hlmCardTitle class="text-lg">Secondary Contact (Optional)</div>
       <div hlmCardDescription>Additional contact person for your business operations.</div>
     </div>
-    <div hlmCardContent class="space-y-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div hlmCardContent class="space-y-3 sm:space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
         <hlm-form-field>
           <label hlmLabel>Full Name</label>
           <input hlmInput placeholder="Jane Smith" formControlName="secondaryContactName" />

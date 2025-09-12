@@ -92,5 +92,5 @@
 
 input::placeholder,
 textarea::placeholder {
-  color: hsl(var(--muted-foreground) / 0.6) !important;
+  color: hsl(0deg 0% 80%) !important; /* Pure light gray */
 }

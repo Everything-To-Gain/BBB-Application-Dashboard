@@ -1,12 +1,12 @@
-<div class="space-y-6">
+<div class="space-y-4 sm:space-y-6">
   <div hlmCard>
     <div hlmCardHeader>
-      <div hlmCardTitle class="text-xl text-primary">Business Details & Licensing</div>
+      <div hlmCardTitle class="text-lg sm:text-xl text-primary">Business Details & Licensing</div>
       <div hlmCardDescription>
         Tell us more about your business operations and legal information.
       </div>
     </div>
-    <div hlmCardContent class="space-y-4">
+    <div hlmCardContent class="space-y-3 sm:space-y-4">
       <hlm-form-field>
         <label hlmLabel>Business Description *</label>
         <textarea
@@ -28,7 +28,7 @@
         <hlm-error>Business types are required</hlm-error>
       </hlm-form-field>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
         <hlm-form-field>
           <label hlmLabel>EIN (Employer Identification Number) *</label>
           <input hlmInput placeholder="12-3456789" formControlName="ein" />
@@ -75,7 +75,7 @@
       <div hlmCardTitle class="text-lg">Licenses & Certifications</div>
       <div hlmCardDescription>Professional licenses and certifications for your business.</div>
     </div>
-    <div hlmCardContent class="space-y-4">
+    <div hlmCardContent class="space-y-3 sm:space-y-4">
       <hlm-form-field>
         <label hlmLabel>State Business License *</label>
         <input
@@ -102,8 +102,8 @@
       <div hlmCardTitle class="text-lg">Business Scale & Operations</div>
       <div hlmCardDescription>Information about your business size and customer base.</div>
     </div>
-    <div hlmCardContent class="space-y-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div hlmCardContent class="space-y-3 sm:space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
         <hlm-form-field>
           <label hlmLabel>Number of Employees *</label>
           <brn-select

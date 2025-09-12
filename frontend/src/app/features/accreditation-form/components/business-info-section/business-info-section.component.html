@@ -1,11 +1,11 @@
-<div class="space-y-6">
+<div class="space-y-4 sm:space-y-6">
   <div hlmCard>
     <div hlmCardHeader>
-      <div hlmCardTitle class="text-xl text-primary">Business Information</div>
+      <div hlmCardTitle class="text-lg sm:text-xl text-primary">Business Information</div>
       <div hlmCardDescription>Tell us about your business and where it's located.</div>
     </div>
-    <div hlmCardContent class="space-y-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div hlmCardContent class="space-y-3 sm:space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
         <hlm-form-field>
           <label hlmLabel>Business Name *</label>
           <input hlmInput placeholder="ABC Roofing Inc." formControlName="businessName" />
@@ -18,7 +18,7 @@
         </hlm-form-field>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
         <hlm-form-field>
           <label hlmLabel>Business Address *</label>
           <input hlmInput placeholder="123 Main St" formControlName="businessAddress" />
@@ -31,7 +31,7 @@
         </hlm-form-field>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <hlm-form-field>
           <label hlmLabel>State *</label>
           <input hlmInput placeholder="CA" formControlName="businessState" />
@@ -51,14 +51,14 @@
       <div hlmCardTitle class="text-lg">Mailing Address</div>
       <div hlmCardDescription>If different from business address (optional).</div>
     </div>
-    <div hlmCardContent class="space-y-4">
+    <div hlmCardContent class="space-y-3 sm:space-y-4">
       <hlm-form-field>
         <label hlmLabel>Mailing Address</label>
         <input hlmInput placeholder="PO Box 456" formControlName="mailingAddress" />
         <hlm-error>Mailing address is required</hlm-error>
       </hlm-form-field>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <hlm-form-field>
           <label hlmLabel>City</label>
           <input hlmInput placeholder="Los Angeles" formControlName="contactCity" />

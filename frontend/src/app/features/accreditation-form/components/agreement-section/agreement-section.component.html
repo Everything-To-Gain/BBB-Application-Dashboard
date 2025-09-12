@@ -1,13 +1,13 @@
-<div class="space-y-6">
+<div class="space-y-4 sm:space-y-6">
   <div hlmCard>
     <div hlmCardHeader>
-      <div hlmCardTitle class="text-xl text-primary flex items-center gap-2">
-        <ng-icon name="lucideShield" class="h-5 w-5" />
+      <div hlmCardTitle class="text-lg sm:text-xl text-primary flex items-center gap-2">
+        <ng-icon name="lucideShield" class="h-4 w-4 sm:h-5 sm:w-5" />
         Final Agreement & Submission
       </div>
       <div hlmCardDescription>Review your information and provide final agreement details.</div>
     </div>
-    <div hlmCardContent class="space-y-6">
+    <div hlmCardContent class="space-y-4 sm:space-y-6">
       <hlm-form-field>
         <label hlmLabel>Submitted By (Full Name & Title) *</label>
         <input hlmInput placeholder="John Doe, Owner" formControlName="submittedByName" />
@@ -19,9 +19,11 @@
         <hlm-error>Email is required</hlm-error>
       </hlm-form-field>
 
-      <div class="flex items-center gap-2">
-        <hlm-checkbox formControlName="agreement" />
-        <label hlmLabel>I agree to the terms and conditions *</label>
+      <div class="flex items-start gap-2 sm:gap-3">
+        <hlm-checkbox formControlName="agreement" class="mt-1" />
+        <label hlmLabel class="text-sm sm:text-base leading-relaxed"
+          >I agree to the terms and conditions *</label
+        >
       </div>
     </div>
   </div>
