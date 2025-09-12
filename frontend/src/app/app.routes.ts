@@ -4,10 +4,12 @@ import { AccreditationFormComponent } from './features/accreditation-form/pages/
 export const routes: Routes = [
   {
     path: '',
+    title: 'Home',
     redirectTo: 'accreditation-form',
     pathMatch: 'full',
   },
   {
+    title: 'Accreditation Form',
     path: 'accreditation-form',
     component: AccreditationFormComponent,
   },

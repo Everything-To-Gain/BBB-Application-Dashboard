@@ -89,3 +89,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+input::placeholder,
+textarea::placeholder {
+  color: hsl(var(--muted-foreground) / 0.6) !important;
+}
