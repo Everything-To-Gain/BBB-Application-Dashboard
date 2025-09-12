@@ -1,9 +1,6 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -11,17 +8,69 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
-    "esModuleInterop": true,
     "experimentalDecorators": true,
-    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "ES2022"
+    "module": "preserve",
+    "paths": {
+      "@spartan-ng/helm/button": [
+        "./src/app/shared/ui/ui-button-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/input": [
+        "./src/app/shared/ui/ui-input-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/card": [
+        "./src/app/shared/ui/ui-card-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/checkbox": [
+        "./src/app/shared/ui/ui-checkbox-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/date-picker": [
+        "./src/app/shared/ui/ui-date-picker-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/form-field": [
+        "./src/app/shared/ui/ui-form-field-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/label": [
+        "./src/app/shared/ui/ui-label-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/progress": [
+        "./src/app/shared/ui/ui-progress-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/select": [
+        "./src/app/shared/ui/ui-select-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/separator": [
+        "./src/app/shared/ui/ui-separator-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/icon": [
+        "./src/app/shared/ui/ui-icon-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/calendar": [
+        "./src/app/shared/ui/ui-calendar-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/popover": [
+        "./src/app/shared/ui/ui-popover-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/alert": [
+        "./src/app/shared/ui/ui-alert-helm/src/index.ts"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
+    "typeCheckHostBindings": true,
     "strictTemplates": true
-  }
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
 }

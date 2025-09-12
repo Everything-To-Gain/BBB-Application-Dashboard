@@ -1,0 +1,73 @@
+<div class="min-h-screen bg-bbb-gray-10 py-8">
+  <div class="container mx-auto max-w-4xl px-4">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-primary mb-2">Business Registration</h1>
+      <p class="text-lg text-muted-foreground">Complete your business profile to get started</p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="mb-8">
+      <hlm-progress class="h-2 mb-4" aria-labelledby="loading" [value]="progress()">
+        <hlm-progress-indicator />
+      </hlm-progress>
+      <div class="flex justify-between">
+        @for (step of steps; track step.id) {
+        <div [class]="getStepClasses(step.id)">
+          <div [class]="getStepIconClasses(step.id)">
+            @if (currentStep() > step.id) {
+            <ng-icon hlm name="lucideCircleCheck" />
+            } @else {
+            <ng-icon hlm [name]="step.icon" />
+            }
+          </div>
+          <span class="text-sm font-medium text-center">{{ step.title }}</span>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div hlmCard class="p-6 bbb-shadow-base">
+      <form [formGroup]="accreditationForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <app-business-info-section
+          [form]="accreditationForm"
+          [hidden]="currentStep() !== 1"
+        ></app-business-info-section>
+        <app-contact-info-section
+          [form]="accreditationForm"
+          [hidden]="currentStep() !== 2"
+        ></app-contact-info-section>
+        <app-business-details-section
+          [form]="accreditationForm"
+          [hidden]="currentStep() !== 3"
+        ></app-business-details-section>
+        <app-agreement-section
+          [form]="accreditationForm"
+          [hidden]="currentStep() !== 4"
+        ></app-agreement-section>
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between pt-6 border-t border-border">
+          <button
+            hlmBtn
+            variant="outline"
+            type="button"
+            (click)="prevStep()"
+            [disabled]="currentStep() === 1"
+          >
+            Previous
+          </button>
+
+          @if (currentStep() < steps.length) {
+          <button hlmBtn type="button" (click)="nextStep()">Next Step</button>
+          } @else {
+          <button hlmBtn type="submit" class="bg-primary hover:bg-primary/90">
+            Submit Application
+          </button>
+          }
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- email you would like to receive updates from trackingEmail -->
