@@ -1,24 +1,27 @@
-var builder = WebApplication.CreateBuilder(args);
+using BBB_ApplicationDashboard.Api.Extensions;
+using DotNetEnv;
 
-// Add services to the container.
+var app = await CreateWebApplicationAsync(args);
+await app.RunAsync();
 
-builder.Services.AddControllers();
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+static async Task<WebApplication> CreateWebApplicationAsync(string[] args)
 {
-    app.MapOpenApi();
+    //! 🧩 load all env variables for local dev only first thing
+    Env.Load();
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services.AddSecretManager();
+    builder.Services.AddDatabase();
+    builder.Services.AddApplicationServices();
+
+    var app = builder.Build();
+    await app.UseMigrationAsync();
+    app.UseStaticFiles();
+    app.UseHttpsAndErrorHandling();
+    app.UseRoutingAndEndpoints();
+    app.UseApiDocs();
+
+    app.MapGet("/", () => Results.Redirect("/docs")).ExcludeFromDescription();
+
+    return app;
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
