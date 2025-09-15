@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Src/">
+    <Project Path="Src/BBB-ApplicationDashboard.Api/BBB-ApplicationDashboard.Api.csproj" />
+    <Project Path="Src/BBB-ApplicationDashboard.Application/BBB-ApplicationDashboard.Application.csproj" />
+    <Project Path="Src/BBB-ApplicationDashboard.Domain/BBB-ApplicationDashboard.Domain.csproj" />
+    <Project Path="Src/BBB-ApplicationDashboard.Infrastructure/BBB-ApplicationDashboard.Infrastructure.csproj" />
+  </Folder>
+</Solution>

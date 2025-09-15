@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <RootNamespace>BBB_ApplicationDashboard.Application</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RootNamespace>BBB_ApplicationDashboard.Application</RootNamespace>
+    <AssemblyName>BBB-ApplicationDashboard.Application</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\BBB-ApplicationDashboard.Domain\BBB-ApplicationDashboard.Domain.csproj" />

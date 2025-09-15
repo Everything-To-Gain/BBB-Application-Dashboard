@@ -1,16 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <RootNamespace>BBB_ApplicationDashboard.Api</RootNamespace>
+    <AssemblyName>BBB-ApplicationDashboard.Api</AssemblyName>
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+    <PackageReference Include="Scalar.AspNetCore" Version="1.2.57" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Mapster.Core" Version="7.4.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BBB-ApplicationDashboard.Application\BBB-ApplicationDashboard.Application.csproj" />
     <ProjectReference Include="..\BBB-ApplicationDashboard.Infrastructure\BBB-ApplicationDashboard.Infrastructure.csproj" />
+    <ProjectReference Include="..\BBB-ApplicationDashboard.Application\BBB-ApplicationDashboard.Application.csproj" />
     <ProjectReference Include="..\BBB-ApplicationDashboard.Domain\BBB-ApplicationDashboard.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
