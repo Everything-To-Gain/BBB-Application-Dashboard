@@ -1,10 +1,21 @@
+version: "3.8"
+
 services:
-  bbb-app:
+  bbb-application-dashboard:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: bbb-application-dashboard
     ports:
       - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
     env_file:
-      - Src\BBB-ApplicationDashboard.Api\.env
+      - Src/BBB-ApplicationDashboard.Api/.env
     restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
