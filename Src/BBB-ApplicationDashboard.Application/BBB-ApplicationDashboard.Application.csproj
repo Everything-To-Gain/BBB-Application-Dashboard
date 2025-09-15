@@ -8,4 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BBB-ApplicationDashboard.Domain\BBB-ApplicationDashboard.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
+  </ItemGroup>
 </Project>

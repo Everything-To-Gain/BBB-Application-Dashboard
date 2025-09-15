@@ -9,4 +9,10 @@
     <ProjectReference Include="..\BBB-ApplicationDashboard.Application\BBB-ApplicationDashboard.Application.csproj" />
     <ProjectReference Include="..\BBB-ApplicationDashboard.Domain\BBB-ApplicationDashboard.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Infisical.Sdk" Version="2.3.9" />
+    <PackageReference Include="MailKit" Version="4.13.0" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.5.0" />
+  </ItemGroup>
 </Project>
