@@ -6,4 +6,7 @@
     <RootNamespace>BBB_ApplicationDashboard.Domain</RootNamespace>
     <AssemblyName>BBB-ApplicationDashboard.Domain</AssemblyName>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.29.0" />
+  </ItemGroup>
 </Project>

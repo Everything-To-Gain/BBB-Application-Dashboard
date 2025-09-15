@@ -159,12 +159,20 @@ public static class WebApplicationExtension
                     .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
             }
         );
+        app.MapGet(
+                "/",
+                context =>
+                {
+                    context.Response.Redirect("/docs");
+                    return Task.CompletedTask;
+                }
+            )
+            .ExcludeFromDescription();
         return app;
     }
 
     private static void ConfigureMapster()
     {
-        // Configure mapping from Accreditation entity to AccreditationResponse DTO
         TypeAdapterConfig<Accreditation, AccreditationResponse>.NewConfig();
     }
 }
