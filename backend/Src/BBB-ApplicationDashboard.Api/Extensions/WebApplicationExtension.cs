@@ -107,7 +107,12 @@ public static class WebApplicationExtension
 
     public static IApplicationBuilder UseHttpsAndErrorHandling(this IApplicationBuilder app)
     {
-        app.UseHttpsRedirection();
+        // Only use HTTPS redirection in development
+        var environment = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
+        if (environment.IsDevelopment())
+        {
+            app.UseHttpsRedirection();
+        }
         app.UseExceptionHandler();
         return app;
     }
