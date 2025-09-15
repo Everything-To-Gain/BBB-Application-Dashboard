@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: bbb-application-dashboard
+  IMAGE: omar0saleh/application-dashboard
 
 jobs:
   build-and-deploy:
@@ -32,7 +32,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE }}
           tags: |
             type=ref,event=branch
             type=raw,value=latest,enable={{is_default_branch}}
@@ -51,7 +51,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: gitnasr/coolify-trigger-deploy@v2.0.0
         with:
-          docker_image: ${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          docker_image: ${{ env.REGISTRY }}/${{ env.IMAGE }}:latest
           coolify_url: ${{ secrets.COOLIFY_URL }}
           coolify_resource_id: ${{ secrets.COOLIFY_RESOURCE_ID }}
           coolify_api_token: ${{ secrets.COOLIFY_API_TOKEN }}
