@@ -27,7 +27,8 @@ public class SubmittedDataRequest
     public string SecondaryPhone { get; set; } = string.Empty;
     public string[] SecondaryDelegationTasks { get; set; } = [];
     public string Website { get; set; } = string.Empty;
-    public string Ein { get; set; } = string.Empty;
+    public string EIN { get; set; } = string.Empty;
+    public string SSN { get; set; } = string.Empty;
     public string StateBusinessLicense { get; set; } = string.Empty;
     public string ProfessionalLicense { get; set; } = string.Empty;
     public string BusinessDescription { get; set; } = string.Empty;
@@ -39,5 +40,5 @@ public class SubmittedDataRequest
     public string[] AvgCustomersPerYear { get; set; } = [];
     public string SubmittedByName { get; set; } = string.Empty;
     public string TrackingEmail { get; set; } = string.Empty;
-    public bool CertificationAgreement { get; set; }
+    public bool Agreement { get; set; }
 }

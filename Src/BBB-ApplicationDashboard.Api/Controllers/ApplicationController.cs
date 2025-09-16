@@ -43,6 +43,7 @@ public class ApplicationController(
                     : "Application submitted successfully and confirmation email sent"
             )
             : ErrorResponse(data: "Application received but failed to send confirmation email");
+        //TODO SEND TO SCV SERVER WITH SHAWKI-CHAN DATA
     }
 
     [HttpPost("test-email")]

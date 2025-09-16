@@ -166,6 +166,29 @@ public static class WebApplicationExtension
         return services;
     }
 
+    public static IServiceCollection AddApplicationCors(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy(
+                "Angular Cors",
+                policy =>
+                    policy
+                        .WithOrigins(
+                            [
+                                "http://localhost:4201",
+                                "https://localhost:4201",
+                                "https://bbb-partners.playdough.co",
+                            ]
+                        )
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+            );
+        });
+        return services;
+    }
+
     public static IApplicationBuilder UseHttpsAndErrorHandling(this IApplicationBuilder app)
     {
         app.UseHttpsRedirection();
