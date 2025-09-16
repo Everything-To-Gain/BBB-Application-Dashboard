@@ -67,7 +67,7 @@ public class ApplicationController(
             var emailHtml = CreateEmailTemplate(
                 sampleRequest,
                 testApplicationNumber,
-                $"http://localhost:5275/track/{Guid.NewGuid()}"
+                $"http://localhost:7100/track/{Guid.NewGuid()}"
             );
 
             var emailMessage = new EmailMessage

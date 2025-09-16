@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Scalar.AspNetCore;
+using Serilog;
+using Serilog.Events;
 
 namespace BBB_ApplicationDashboard.Api.Extensions;
 
@@ -47,6 +49,65 @@ public static class WebApplicationExtension
         });
         services.AddSingleton<ISecretService, SecretService>();
         return services;
+    }
+
+    public static void ConfigureSerilog(this WebApplicationBuilder builder)
+    {
+        var isDevelopment = builder.Environment.IsDevelopment();
+
+        var loggerConfig = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .Enrich.WithProperty("ApplicationName", "BBBAppDashboard")
+            .WriteTo.Console(
+                outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}",
+                restrictedToMinimumLevel: LogEventLevel.Debug
+            );
+
+        if (isDevelopment)
+        {
+            loggerConfig
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Information);
+        }
+        else
+        {
+            loggerConfig
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning);
+        }
+
+        Log.Logger = loggerConfig.CreateLogger();
+        builder.Host.UseSerilog();
+    }
+
+    public static WebApplication UseRequestLogging(this WebApplication app)
+    {
+        app.UseSerilogRequestLogging(options =>
+        {
+            options.MessageTemplate =
+                "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+            options.GetLevel = (httpContext, elapsed, ex) =>
+            {
+                var elapsedMs = elapsed;
+                if (elapsedMs > 240000)
+                    return LogEventLevel.Fatal;
+                if (elapsedMs > 120000)
+                    return LogEventLevel.Warning;
+                if (ex != null || httpContext.Response.StatusCode >= 500)
+                    return LogEventLevel.Error;
+                return LogEventLevel.Information;
+            };
+
+            options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+            {
+                diagnosticContext.Set("RequestPath", httpContext.Request.Path);
+                diagnosticContext.Set("RequestMethod", httpContext.Request.Method);
+                diagnosticContext.Set("StatusCode", httpContext.Response.StatusCode);
+            };
+        });
+        return app;
     }
 
     public static IServiceCollection AddDatabase(this IServiceCollection services)
@@ -107,12 +168,7 @@ public static class WebApplicationExtension
 
     public static IApplicationBuilder UseHttpsAndErrorHandling(this IApplicationBuilder app)
     {
-        // Only use HTTPS redirection in development
-        var environment = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
-        if (environment.IsDevelopment())
-        {
-            app.UseHttpsRedirection();
-        }
+        app.UseHttpsRedirection();
         app.UseExceptionHandler();
         return app;
     }

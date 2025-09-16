@@ -4,12 +4,22 @@ using BBB_ApplicationDashboard.Infrastructure.Configuration;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MimeKit;
 
 namespace BBB_ApplicationDashboard.Infrastructure.Services.Email;
 
-public class EmailService(EmailOptions emailOptions, ILogger<EmailService> logger) : IEmailService
+public class EmailService : IEmailService
 {
+    private readonly EmailOptions emailOptions;
+    private readonly ILogger<EmailService> logger;
+
+    public EmailService(IOptions<EmailOptions> options, ILogger<EmailService> logger)
+    {
+        this.emailOptions = options.Value;
+        this.logger = logger;
+    }
+
     public async Task<bool> SendAsync(EmailMessage message, CancellationToken cancellationToken)
     {
         //! 1️⃣ initialize mail
