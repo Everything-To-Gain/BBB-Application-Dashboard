@@ -37,7 +37,7 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true \
 COPY --from=build /app/publish .
 
 # Expose port
-EXPOSE 8080
+EXPOSE 8085
 
 # Start the application
 ENTRYPOINT ["dotnet", "BBB-ApplicationDashboard.Api.dll"]
