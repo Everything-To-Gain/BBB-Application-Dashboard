@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: bbb-application-dashboard
     ports:
-      - "8080:8080"
+      - "8085:8085"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     env_file:

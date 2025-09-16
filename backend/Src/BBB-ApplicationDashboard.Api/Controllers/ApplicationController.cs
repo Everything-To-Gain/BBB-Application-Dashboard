@@ -9,23 +9,6 @@ public class ApplicationController(
     IApplicationService applicationService
 ) : CustomControllerBase
 {
-    [HttpGet("health")]
-    [ExcludeFromDescription]
-    public IActionResult HealthCheck()
-    {
-        return SucessResponse(
-            new
-            {
-                Status = "Healthy",
-                Timestamp = DateTime.UtcNow,
-                Environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
-                    ?? "Unknown",
-                Version = "1.0.0",
-            },
-            "API is running successfully"
-        );
-    }
-
     [HttpPost("submit-form")]
     public async Task<IActionResult> SubmitApplicationForm(SubmittedDataRequest request)
     {

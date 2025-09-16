@@ -31,7 +31,7 @@ WORKDIR /app
 # Set environment variables
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true \
     ASPNETCORE_ENVIRONMENT=Production \
-    ASPNETCORE_URLS=http://+:8080
+    ASPNETCORE_URLS=http://+:8085
 
 # Copy published app
 COPY --from=build /app/publish .
