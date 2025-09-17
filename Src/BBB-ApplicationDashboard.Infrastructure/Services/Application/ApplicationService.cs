@@ -30,7 +30,7 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
         {
             ApplicationId = Guid.NewGuid(),
             SubmittedEmail = request.TrackingEmail!,
-            TrackingLink = $"https://bbb.org/track/{applicationNumber}",
+            TrackingLink = $"https://bbb-partners.playdough.co/track-application/{applicationNumber}",
             ApplicationStatus = ApplicationStatus.Submitted,
             ApplicationNumber = applicationNumber,
         };
