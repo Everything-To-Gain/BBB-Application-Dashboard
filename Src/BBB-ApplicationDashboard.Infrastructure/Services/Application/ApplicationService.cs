@@ -21,12 +21,18 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
             duplicateResponse.IsDuplicate = true;
             return duplicateResponse;
         }
+
+        var applicationsThisYear = await context.Accreditations.CountAsync(a =>
+            a.SubmittedEmail != null
+        );
+        var applicationNumber = $"BBB-{DateTime.Now.Year}-ACC-{applicationsThisYear + 1:D4}";
         Accreditation accreditation = new()
         {
             ApplicationId = Guid.NewGuid(),
-            SubmittedEmail = request.PrimaryBusinessEmail,
-            TrackingLink = $"https://bbb.org/track/{Guid.NewGuid()}",
+            SubmittedEmail = request.TrackingEmail!,
+            TrackingLink = $"https://bbb-partners.playdough.co/track-application/{applicationNumber}",
             ApplicationStatus = ApplicationStatus.Submitted,
+            ApplicationNumber = applicationNumber,
         };
 
         context.Accreditations.Add(accreditation);
@@ -34,11 +40,6 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
 
         AccreditationResponse accreditationResponse = accreditation.Adapt<AccreditationResponse>();
 
-        var applicationsThisYear = await context.Accreditations.CountAsync(a =>
-            a.SubmittedEmail != null
-        );
-        accreditationResponse.ApplicationNumber =
-            $"BBB-{DateTime.Now.Year}-ACC-{applicationsThisYear + 1:D4}";
         return accreditationResponse;
     }
 }
