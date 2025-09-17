@@ -26,7 +26,7 @@ public class ApplicationController(
         //! Send email
         var emailMessage = new EmailMessage
         {
-            To = request.TrackingEmail,
+            To = request.TrackingEmail!,
             Subject = accreditationResponse.IsDuplicate
                 ? "BBB Accreditation Application - Duplicate Submission Detected"
                 : "BBB Accreditation Application Submitted Successfully",
