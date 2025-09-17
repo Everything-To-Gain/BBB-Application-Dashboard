@@ -10,19 +10,18 @@ public class TobService(IMongoDatabase database) : ITobService
     public async Task<List<TOB>> GetTOBs(string? searchTerm)
     {
         var col = database.GetCollection<BsonDocument>("tobs");
-        if (searchTerm is null)
-            return await col.Aggregate()
-                .Project<TOB>(new BsonDocument { { "_id", "$_id" }, { "tob", "$properties.tob" } })
-                .Limit(5)
-                .ToListAsync();
+        var projection = new BsonDocument
+        {
+            { "CbbbId", new BsonDocument("$toString", "$properties.cbbbid") },
+            { "Name", "$properties.tob" },
+        };
+        var pipeline = col.Aggregate();
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            var regex = new BsonRegularExpression(searchTerm, "i");
+            pipeline = pipeline.Match(new BsonDocument("properties.tob", regex));
+        }
 
-        //! smart search implementation
-        var regex = new BsonRegularExpression(searchTerm, "i");
-        var filter = Builders<BsonDocument>.Filter.Regex("properties.tob", regex);
-        var result = await col.Find(filter)
-            .Project<TOB>(new BsonDocument { { "_id", "$_id" }, { "tob", "$properties.tob" } })
-            .Limit(5)
-            .ToListAsync();
-        return result;
+        return await pipeline.Project<TOB>(projection).Limit(5).ToListAsync();
     }
 }

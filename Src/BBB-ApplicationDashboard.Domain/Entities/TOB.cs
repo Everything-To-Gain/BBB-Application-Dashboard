@@ -1,14 +1,11 @@
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace BBB_ApplicationDashboard.Domain.Entities;
 
+[BsonIgnoreExtraElements]
 public class TOB
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = null!;
+    public string CbbbId { get; set; } = null!;
 
-    [BsonElement("tob")]
-    public string Tob { get; set; } = null!;
+    public string Name { get; set; } = null!;
 }

@@ -11,7 +11,7 @@ public class Program
         Env.Load();
 
         var builder = WebApplication.CreateBuilder();
-        builder.ConfigureSerilog();
+        builder.AddApplication();
 
         try
         {
@@ -21,11 +21,9 @@ public class Program
 
             var app = builder.Build();
 
-            app.UseRequestLogging().UseHttpsAndErrorHandling();
+            app.UseApplicationPipeline();
 
             await app.UseMigrationAsync();
-
-            app.UseRoutingAndEndpoints().UseApiDocs();
 
             Log.Information("✅ BBB Application Dashboard API started successfully");
 
