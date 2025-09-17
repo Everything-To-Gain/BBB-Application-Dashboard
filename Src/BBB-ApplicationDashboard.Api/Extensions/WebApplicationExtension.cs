@@ -22,6 +22,8 @@ namespace BBB_ApplicationDashboard.Api.Extensions;
 
 public static class WebApplicationExtension
 {
+    private const string CorsPolicy = "Angular Cors";
+
     public static IServiceCollection AddSecretManager(this IServiceCollection services)
     {
         services.AddSingleton(_ =>
@@ -171,17 +173,14 @@ public static class WebApplicationExtension
         services.AddCors(options =>
         {
             options.AddPolicy(
-                "Angular Cors",
+                CorsPolicy,
                 policy =>
                     policy
                         .WithOrigins(
-                            [
-                                "http://localhost:4201",
-                                "https://localhost:4201",
-                                "https://bbb-partners.playdough.co",
-                            ]
+                            "http://localhost:4201",
+                            "https://localhost:4201",
+                            "https://bbb-partners.playdough.co"
                         )
-                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
             );
@@ -189,7 +188,17 @@ public static class WebApplicationExtension
         return services;
     }
 
-    public static IApplicationBuilder UseHttpsAndErrorHandling(this IApplicationBuilder app)
+    public static void AddApplication(this WebApplicationBuilder builder)
+    {
+        builder.ConfigureSerilog();
+        builder
+            .Services.AddSecretManager()
+            .AddDatabase()
+            .AddApplicationServices()
+            .AddApplicationCors();
+    }
+
+    public static WebApplication UseHttpsAndErrorHandling(this WebApplication app)
     {
         app.UseHttpsRedirection();
         app.UseExceptionHandler();
@@ -252,6 +261,21 @@ public static class WebApplicationExtension
                 }
             )
             .ExcludeFromDescription();
+        return app;
+    }
+
+    public static WebApplication UseApplicationPipeline(this WebApplication app)
+    {
+        return app.UseRequestLogging()
+            .UseHttpsAndErrorHandling()
+            .UseAppCors()
+            .UseRoutingAndEndpoints()
+            .UseApiDocs();
+    }
+
+    public static WebApplication UseAppCors(this WebApplication app)
+    {
+        app.UseCors(CorsPolicy);
         return app;
     }
 

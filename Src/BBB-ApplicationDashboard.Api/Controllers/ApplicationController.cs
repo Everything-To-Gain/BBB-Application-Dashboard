@@ -60,7 +60,7 @@ public class ApplicationController(
 
             var sampleRequest = new SubmittedDataRequest
             {
-                PrimaryContactName = recipientName,
+                PrimaryFirstName = recipientName,
                 BusinessName = businessName,
                 PrimaryBusinessEmail = recipientEmail,
             };
@@ -105,7 +105,7 @@ public class ApplicationController(
             : "Application Successfully Submitted";
 
         var statusMessage = isDuplicate
-            ? $"Dear {request.PrimaryContactName}, we found an existing application for {request.BusinessName}."
+            ? $"Dear {request.PrimaryFirstName} {request.PrimaryLastName}, we found an existing application for {request.BusinessName}."
             : "Your BBB Accreditation application has been received and is now under review.";
 
         var statusText = isDuplicate ? "Previously Submitted" : "Under Review";
