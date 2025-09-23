@@ -292,7 +292,7 @@ public static class WebApplicationExtension
         {
             await dbContext.Database.EnsureCreatedAsync();
 
-            await dbContext.Database.MigrateAsync();
+            // await dbContext.Database.MigrateAsync();
         }
         catch (Exception)
         {

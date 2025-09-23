@@ -9,6 +9,13 @@ public class ApplicationController(
     IApplicationService applicationService
 ) : CustomControllerBase
 {
+    [HttpPost("update-application-info")]
+    public async Task<IActionResult> UpdateApplicationInfo(ApplicationInfo applicationInfo)
+    {
+        await applicationService.UpdateApplicationAsync(applicationInfo);
+        return SucessResponse("Application updated successfully");
+    }
+
     [HttpPost("submit-form")]
     public async Task<IActionResult> SubmitApplicationForm(SubmittedDataRequest request)
     {
@@ -22,6 +29,7 @@ public class ApplicationController(
         );
 
         //TODO SEND TO SCV SERVER WITH SHAWKI-CHAN DATA
+        return SucessResponse(data: new { applicationId = accreditationResponse.ApplicationId });
     }
 
     // [HttpPost("test-email")]

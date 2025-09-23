@@ -97,4 +97,24 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
 
         return accreditationResponse;
     }
+
+    public async Task UpdateApplicationAsync(ApplicationInfo applicationInfo)
+    {
+        if (!Guid.TryParse(applicationInfo.ApplicationID, out var applicationId))
+            throw new ArgumentException(
+                "Invalid ApplicationID format",
+                nameof(applicationInfo.ApplicationID)
+            );
+
+        var accreditation =
+            await context.Accreditations.FirstOrDefaultAsync(a => a.ApplicationId == applicationId)
+            ?? throw new KeyNotFoundException("Accreditation not found");
+
+        accreditation.BlueApplicationID = applicationInfo.BlueAppID;
+        accreditation.HubSpotApplicationID = applicationInfo.HubSpotAppID;
+        accreditation.BID = applicationInfo.BID;
+        accreditation.CompanyRecordID = applicationInfo.CompanyRecordID;
+
+        await context.SaveChangesAsync();
+    }
 }

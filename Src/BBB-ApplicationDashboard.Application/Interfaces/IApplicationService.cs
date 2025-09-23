@@ -6,4 +6,5 @@ namespace BBB_ApplicationDashboard.Application.Interfaces;
 public interface IApplicationService
 {
     Task<AccreditationResponse> CreateApplicationAsync(SubmittedDataRequest request);
+    Task UpdateApplicationAsync(ApplicationInfo applicationInfo);
 }
