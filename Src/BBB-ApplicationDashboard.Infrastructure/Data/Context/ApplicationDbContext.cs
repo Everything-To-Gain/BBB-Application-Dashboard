@@ -1,8 +1,6 @@
 using System.Text.Json;
-using System.Text.Json;
 using BBB_ApplicationDashboard.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace BBB_ApplicationDashboard.Infrastructure.Data.Context;
 
