@@ -1,74 +1,57 @@
 using System.ComponentModel.DataAnnotations;
-using BBB_ApplicationDashboard.Domain.Entities;
+using BBB_ApplicationDashboard.Domain.ValueObjects;
 
-namespace BBB_ApplicationDashboard.Application.DTOs;
+namespace BBB_ApplicationDashboard.Domain.Entities;
 
-public class SubmittedDataRequest
+public class Accreditation
 {
-    [Required(ErrorMessage = "Business name is required")]
+    [Key]
+    public Guid ApplicationId { get; set; }
+    public string ApplicationNumber { get; set; } = string.Empty;
+    public string? BlueApplicationID { get; set; }
+    public string? HubSpotApplicationID { get; set; }
+    public string? BID { get; set; }
+    public string? CompanyRecordID { get; set; }
+
+    public string TrackingLink { get; set; } = null!;
+    public ApplicationStatus ApplicationStatus { get; set; }
     public required string BusinessName { get; set; }
     public string? DoingBusinessAs { get; set; }
-
-    [Required(ErrorMessage = "Business address is required")]
     public required string BusinessAddress { get; set; }
     public string? BusinessAptSuite { get; set; }
-
-    [Required(ErrorMessage = "Business state is required")]
     public required string BusinessState { get; set; }
-
-    [Required(ErrorMessage = "Business city is required")]
     public required string BusinessCity { get; set; }
-
-    [Required(ErrorMessage = "Business zip is required")]
     public required string BusinessZip { get; set; }
 
-    [Required(ErrorMessage = "Mailing address is required")]
     public required string MailingAddress { get; set; }
 
-    [Required(ErrorMessage = "Mailing city is required")]
     public required string MailingCity { get; set; }
 
-    [Required(ErrorMessage = "Mailing state is required")]
     public required string MailingState { get; set; }
 
-    [Required(ErrorMessage = "Mailing zip is required")]
     public required string MailingZip { get; set; }
 
     public int? NumberOfLocations { get; set; }
-
-    [Required(ErrorMessage = "Phone number is required!")]
-    [Phone]
     public required string PrimaryBusinessPhone { get; set; }
 
-    [Required(ErrorMessage = "Business email is required!")]
-    [EmailAddress]
     public required string PrimaryBusinessEmail { get; set; }
     public string? EmailToReceiveQuoteRequestsFromCustomers { get; set; }
     public string? Website { get; set; }
 
     public List<string> SocialMediaLinks { get; set; } = [];
 
-    [Required(ErrorMessage = "Primary first name is required!")]
     public required string PrimaryFirstName { get; set; }
 
-    [Required(ErrorMessage = "Primary last name is required!")]
     public required string PrimaryLastName { get; set; }
 
-    [Required(ErrorMessage = "Primary title is required!")]
     public required string PrimaryTitle { get; set; }
-
-    [Required(ErrorMessage = "Primary date of birth is required!")]
     public required DateOnly PrimaryDateOfBirth { get; set; }
 
-    [Required(ErrorMessage = "Primary contact email is required!")]
     public required string PrimaryContactEmail { get; set; }
 
-    [Required(ErrorMessage = "Primary contact email is required!")]
-    [Phone]
     public required string PrimaryContactNumber { get; set; }
 
     public string? PreferredContactMethod { get; set; }
-
     public List<string> PrimaryContactTypes { get; set; } = [];
     public string? SecondaryFirstName { get; set; }
     public string? SecondaryLastName { get; set; }
@@ -76,14 +59,11 @@ public class SubmittedDataRequest
     public string? SecondaryEmail { get; set; }
     public List<string> SecondaryContactTypes { get; set; } = [];
 
-    [Phone]
     public string? SecondaryPhone { get; set; }
     public string? SecondaryPreferredContactMethod { get; set; }
 
-    [Required(ErrorMessage = "Business description is required!")]
     public required string BusinessDescription { get; set; }
 
-    [Required(ErrorMessage = "Business service area is required!")]
     public required string BusinessServiceArea { get; set; }
     public string? EIN { get; set; }
 
@@ -98,25 +78,32 @@ public class SubmittedDataRequest
 
     public List<License> Licenses { get; set; } = [];
 
-    [Required(ErrorMessage = "Number of full time employees is required!")]
     public required int NumberOfFullTimeEmployees { get; set; }
 
     public required int NumberOfPartTimeEmployees { get; set; }
 
-    [Required(ErrorMessage = "Gross annual revenue is required!")]
     public required int GrossAnnualRevenue { get; set; }
 
-    [Required(ErrorMessage = "Average customer per year is required!")]
     public required string AvgCustomersPerYear { get; set; }
 
     public string? AdditionalBusinessInformation { get; set; }
 
-    [Required(ErrorMessage = "Sumbitted by name is required!")]
     public required string SubmittedByName { get; set; }
 
-    [Required(ErrorMessage = "Sumbitted by title is required!")]
     public required string SubmittedByTitle { get; set; }
 
-    [Required(ErrorMessage = "Sumbitted by email is required!")]
     public required string SubmittedByEmail { get; set; }
+}
+
+public class License
+{
+    [Required(ErrorMessage = "Date issued is required!")]
+    public required DateOnly DateIssued { get; set; }
+
+    [Required(ErrorMessage = "Agency is required!")]
+    public required string Agency { get; set; }
+
+    [Required(ErrorMessage = "Licensing number is required!")]
+    public required string LicensingNumber { get; set; }
+    public DateOnly? Expiration { get; set; }
 }

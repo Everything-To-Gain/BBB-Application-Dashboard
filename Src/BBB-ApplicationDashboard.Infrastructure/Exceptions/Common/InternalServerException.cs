@@ -1,4 +1,4 @@
-namespace BBB_ApplicationDashboard.Domain.Exceptions.Common;
+namespace BBB_ApplicationDashboard.Infrastructure.Exceptions.Common;
 
 public class InternalServerException : Exception
 {

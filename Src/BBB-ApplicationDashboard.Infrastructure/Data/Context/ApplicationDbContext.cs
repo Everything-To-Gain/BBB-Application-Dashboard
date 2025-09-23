@@ -1,3 +1,4 @@
+using System.Text.Json;
 using BBB_ApplicationDashboard.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,4 +9,53 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     : DbContext(options)
 {
     public DbSet<Accreditation> Accreditations { get; set; }
+
+    public DbSet<User> Users { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase, // 👈 optional: camelCase in DB JSON
+            WriteIndented = false,
+        };
+
+        // List<string> → JSONB
+        modelBuilder
+            .Entity<Accreditation>()
+            .Property(a => a.SocialMediaLinks)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, options), // serialize before save
+                v => JsonSerializer.Deserialize<List<string>>(v, options) ?? new List<string>() // deserialize after load
+            )
+            .HasColumnType("jsonb");
+
+        modelBuilder
+            .Entity<Accreditation>()
+            .Property(a => a.PrimaryContactTypes)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, options),
+                v => JsonSerializer.Deserialize<List<string>>(v, options) ?? new List<string>()
+            )
+            .HasColumnType("jsonb");
+
+        modelBuilder
+            .Entity<Accreditation>()
+            .Property(a => a.SecondaryContactTypes)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, options),
+                v => JsonSerializer.Deserialize<List<string>>(v, options) ?? new List<string>()
+            )
+            .HasColumnType("jsonb");
+
+        // List<License> → JSONB
+        modelBuilder
+            .Entity<Accreditation>()
+            .Property(a => a.Licenses)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, options),
+                v => JsonSerializer.Deserialize<List<License>>(v, options) ?? new List<License>()
+            )
+            .HasColumnType("jsonb");
+    }
 }
