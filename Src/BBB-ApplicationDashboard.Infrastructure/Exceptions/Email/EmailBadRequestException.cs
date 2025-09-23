@@ -1,6 +1,6 @@
-using BBB_ApplicationDashboard.Domain.Exceptions.Common;
+using BBB_ApplicationDashboard.Infrastructure.Exceptions.Common;
 
-namespace BBB_ApplicationDashboard.Domain.Exceptions.Email;
+namespace BBB_ApplicationDashboard.Infrastructure.Exceptions.Email;
 
 public class EmailBadRequestException : BadRequestException
 {

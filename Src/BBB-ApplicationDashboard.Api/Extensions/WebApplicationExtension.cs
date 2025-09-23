@@ -1,3 +1,4 @@
+using System.Text;
 using BBB_ApplicationDashboard.Api.Middlewares;
 using BBB_ApplicationDashboard.Application.DTOs;
 using BBB_ApplicationDashboard.Application.Interfaces;
@@ -5,14 +6,19 @@ using BBB_ApplicationDashboard.Domain.Entities;
 using BBB_ApplicationDashboard.Domain.ValueObjects;
 using BBB_ApplicationDashboard.Infrastructure.Configuration;
 using BBB_ApplicationDashboard.Infrastructure.Data.Context;
+using BBB_ApplicationDashboard.Infrastructure.Exceptions.Common;
 using BBB_ApplicationDashboard.Infrastructure.Services.Application;
+using BBB_ApplicationDashboard.Infrastructure.Services.Auth;
 using BBB_ApplicationDashboard.Infrastructure.Services.Email;
 using BBB_ApplicationDashboard.Infrastructure.Services.Security;
 using BBB_ApplicationDashboard.Infrastructure.Services.Tob;
+using BBB_ApplicationDashboard.Infrastructure.Services.User;
 using Infisical.Sdk;
 using Mapster;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using Scalar.AspNetCore;
 using Serilog;
@@ -127,6 +133,14 @@ public static class WebApplicationExtension
                 options.UseNpgsql(connectionString);
             }
         );
+
+        //     services.AddNpgsqlDataSource(,
+        // dataSourceBuilder =>
+        // {
+        //     // 👇 This enables dynamic JSON serialization (System.Text.Json) for arbitrary types
+        //     dataSourceBuilder.EnableDynamicJson();
+        // });
+
         //! configure the monogdb database
         services.AddSingleton<IMongoClient>(serviceProvider =>
         {
@@ -141,6 +155,64 @@ public static class WebApplicationExtension
             sp.GetRequiredService<IMongoClient>().GetDatabase("bbb-cluster-1")
         );
 
+        return services;
+    }
+
+    public static IServiceCollection AddAuth(this IServiceCollection services)
+    {
+        var secretService = services.BuildServiceProvider().GetRequiredService<ISecretService>();
+        string secretKey =
+            secretService.GetSecret(ProjectSecrets.AuthSecretKey, Folders.Auth)
+            ?? throw new NotFoundException("Secret key could not be found!");
+
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(
+                JwtBearerDefaults.AuthenticationScheme,
+                options =>
+                {
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(secretKey)
+                        ),
+                        ClockSkew = TimeSpan.Zero,
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            if (
+                                context.Request.Cookies.TryGetValue(
+                                    "BBBPartnersAuth",
+                                    out var cookieToken
+                                )
+                            )
+                                context.Token = cookieToken;
+                            return Task.CompletedTask;
+                        },
+                    };
+
+                    options.Events.OnMessageReceived = context =>
+                    {
+                        // if (
+                        //     context.Request.Cookies.TryGetValue(
+                        //         "BBBPartnersAuth",
+                        //         out var cookieToken
+                        //     )
+                        // )
+                        //     context.Token = cookieToken;
+                        return Task.CompletedTask;
+                    };
+                }
+            );
+
+        services.AddAuthorization();
         return services;
     }
 
@@ -161,6 +233,11 @@ public static class WebApplicationExtension
 
         //? tob service
         services.AddScoped<ITobService, TobService>();
+
+        //? user service
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         //? Configure Mapster
         ConfigureMapster();
@@ -195,12 +272,13 @@ public static class WebApplicationExtension
             .Services.AddSecretManager()
             .AddDatabase()
             .AddApplicationServices()
-            .AddApplicationCors();
+            .AddApplicationCors()
+            .AddAuth();
     }
 
     public static WebApplication UseHttpsAndErrorHandling(this WebApplication app)
     {
-        app.UseHttpsRedirection();
+        // app.UseHttpsRedirection();
         app.UseExceptionHandler();
         return app;
     }
@@ -235,6 +313,8 @@ public static class WebApplicationExtension
     public static WebApplication UseRoutingAndEndpoints(this WebApplication app)
     {
         app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.MapControllers();
         return app;
     }

@@ -1,6 +1,6 @@
 namespace BBB_ApplicationDashboard.Api.Middlewares;
 
-using BBB_ApplicationDashboard.Domain.Exceptions.Common;
+using BBB_ApplicationDashboard.Infrastructure.Exceptions.Common;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -76,6 +76,11 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
                 exception.Message,
                 exception.GetType().Name,
                 httpContext.Response.StatusCode = StatusCodes.Status409Conflict
+            ),
+            UnauthorizedException => (
+                exception.Message,
+                exception.GetType().Name,
+                httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized
             ),
             _ => (
                 "Something went wrong. Please try again later or contact administrators.",

@@ -8,11 +8,13 @@
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Npgsql.DependencyInjection" Version="9.0.3" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.8.3" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="FluentValidation" Version="11.9.2" />

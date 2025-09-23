@@ -14,84 +14,62 @@ public class ApplicationController(
     {
         //! Create application in database
         var accreditationResponse = await applicationService.CreateApplicationAsync(request);
-
-        //! Create email template with dynamic data
-        var emailHtml = CreateEmailTemplate(
-            request,
-            accreditationResponse.ApplicationNumber,
-            accreditationResponse.TrackingLink,
-            accreditationResponse.IsDuplicate
+        return SucessResponse(
+            data: new { applicationId = accreditationResponse.ApplicationId },
+            message: accreditationResponse.IsDuplicate
+                ? "Duplicate application detected. Email sent with existing application details."
+                : "Application submitted successfully and confirmation email sent"
         );
 
-        //! Send email
-        var emailMessage = new EmailMessage
-        {
-            To = request.TrackingEmail!,
-            Subject = accreditationResponse.IsDuplicate
-                ? "BBB Accreditation Application - Duplicate Submission Detected"
-                : "BBB Accreditation Application Submitted Successfully",
-            HtmlBody = emailHtml,
-        };
-
-        var emailSent = await emailService.SendAsync(emailMessage, CancellationToken.None);
-
-        return emailSent
-            ? SucessResponse(
-                data: new { applicationId = accreditationResponse.ApplicationId },
-                message: accreditationResponse.IsDuplicate
-                    ? "Duplicate application detected. Email sent with existing application details."
-                    : "Application submitted successfully and confirmation email sent"
-            )
-            : ErrorResponse(data: "Application received but failed to send confirmation email");
         //TODO SEND TO SCV SERVER WITH SHAWKI-CHAN DATA
     }
 
-    [HttpPost("test-email")]
-    public async Task<IActionResult> TestEmail()
-    {
-        try
-        {
-            const string recipientEmail = "omarsaleh12216@gmail.com";
-            const string recipientName = "Omar Saleh";
-            const string businessName = "Tech Solutions LLC";
+    // [HttpPost("test-email")]
+    // public async Task<IActionResult> TestEmail()
+    // {
+    //     try
+    //     {
+    //         const string recipientEmail = "omarsaleh12216@gmail.com";
+    //         const string recipientName = "Omar Saleh";
+    //         const string businessName = "Tech Solutions LLC";
 
-            var testApplicationNumber =
-                $"BBB-{DateTime.Now.Year}-ACC-TEST-{Random.Shared.Next(1000, 9999)}";
+    //         var testApplicationNumber =
+    //             $"BBB-{DateTime.Now.Year}-ACC-TEST-{Random.Shared.Next(1000, 9999)}";
 
-            var sampleRequest = new SubmittedDataRequest
-            {
-                PrimaryFirstName = recipientName,
-                BusinessName = businessName,
-                PrimaryBusinessEmail = recipientEmail,
-            };
+    //         var sampleRequest = new SubmittedDataRequest
+    //         {
+    //             PrimaryFirstName = recipientName,
+    //             BusinessName = businessName,
+    //             PrimaryBusinessEmail = recipientEmail,
+    //         };
 
-            var emailHtml = CreateEmailTemplate(
-                sampleRequest,
-                testApplicationNumber,
-                $"http://localhost:7100/track/{Guid.NewGuid()}"
-            );
+    //         var emailHtml = CreateEmailTemplate(
+    //             sampleRequest,
+    //             testApplicationNumber,
+    //             $"http://localhost:7100/track/{Guid.NewGuid()}"
+    //         );
 
-            var emailMessage = new EmailMessage
-            {
-                To = recipientEmail,
-                Subject = "BBB Email Template Test - " + testApplicationNumber,
-                HtmlBody = emailHtml,
-            };
+    //         var emailMessage = new EmailMessage
+    //         {
+    //             To = recipientEmail,
+    //             Subject = "BBB Email Template Test - " + testApplicationNumber,
+    //             HtmlBody = emailHtml,
+    //         };
 
-            var emailSent = await emailService.SendAsync(emailMessage, CancellationToken.None);
+    //         var emailSent = await emailService.SendAsync(emailMessage, CancellationToken.None);
 
-            return emailSent
-                ? SucessResponse(
-                    data: new { testApplicationNumber },
-                    message: "Test email sent successfully to " + recipientEmail
-                )
-                : ErrorResponse(data: "Failed to send test email");
-        }
-        catch (Exception ex)
-        {
-            return ErrorResponse(data: $"Test email failed: {ex.Message}");
-        }
-    }
+    //         return emailSent
+    //             ? SucessResponse(
+    //                 data: new { testApplicationNumber },
+    //                 message: "Test email sent successfully to " + recipientEmail
+    //             )
+    //             : ErrorResponse(data: "Failed to send test email");
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         return ErrorResponse(data: $"Test email failed: {ex.Message}");
+    //     }
+    // }
 
     private static string CreateEmailTemplate(
         SubmittedDataRequest request,
