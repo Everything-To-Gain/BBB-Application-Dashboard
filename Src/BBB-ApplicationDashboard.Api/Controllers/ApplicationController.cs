@@ -1,11 +1,13 @@
 using BBB_ApplicationDashboard.Application.DTOs;
 using BBB_ApplicationDashboard.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BBB_ApplicationDashboard.Api.Controllers;
 
 public class ApplicationController(IApplicationService applicationService) : CustomControllerBase
 {
+    [Authorize]
     [HttpPost("update-application-info")]
     public async Task<IActionResult> UpdateApplicationInfo(ApplicationInfo applicationInfo)
     {

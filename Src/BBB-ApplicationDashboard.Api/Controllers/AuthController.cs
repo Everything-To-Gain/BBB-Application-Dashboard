@@ -3,7 +3,6 @@ using BBB_ApplicationDashboard.Domain.Entities;
 using BBB_ApplicationDashboard.Domain.ValueObjects;
 using BBB_ApplicationDashboard.Infrastructure.Exceptions.User;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BBB_ApplicationDashboard.Api.Controllers
@@ -114,7 +113,7 @@ namespace BBB_ApplicationDashboard.Api.Controllers
             }
 
             //! 3. Delegate cookie and token creation to handlers
-            int expirationDays = 3;
+            int expirationDays = 365250;
             var token = jwtTokenService.GenerateJwtToken(expirationDays, user);
 
             //! 4. Set cookie
