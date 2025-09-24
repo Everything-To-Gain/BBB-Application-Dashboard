@@ -1,14 +1,7 @@
+using BBB_ApplicationDashboard.Application.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BBB_ApplicationDashboard.Api.Controllers;
-
-public class ApiResponse<T>
-{
-    public bool Success { get; init; }
-    public string? Message { get; init; }
-    public T? Data { get; init; }
-    public object? Errors { get; init; }
-}
 
 [ApiController]
 [Route("api/[controller]")]
@@ -20,7 +13,7 @@ public class CustomControllerBase : ControllerBase
     )
     {
         return Ok(
-            new ApiResponse<T>
+            new APIResponse<T>
             {
                 Success = true,
                 Message = message,
@@ -35,7 +28,7 @@ public class CustomControllerBase : ControllerBase
     )
     {
         return Ok(
-            new ApiResponse<T>
+            new APIResponse<T>
             {
                 Success = false,
                 Message = message,

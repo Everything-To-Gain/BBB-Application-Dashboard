@@ -1,4 +1,5 @@
 using BBB_ApplicationDashboard.Application.DTOs;
+using BBB_ApplicationDashboard.Application.DTOs.Application;
 using BBB_ApplicationDashboard.Application.DTOs.PaginatedDtos;
 using BBB_ApplicationDashboard.Application.Interfaces;
 using BBB_ApplicationDashboard.Domain.Entities;
@@ -65,7 +66,97 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
         await context.SaveChangesAsync();
     }
 
-    // public async Task GetInternalData(InternalPaginationRequest) {
+    public async Task<PaginatedResponse<InternalApplicationResponse>> GetInternalData(
+        InternalPaginationRequest request
+    )
+    {
+        //! 1) Filter by source internal
+        var query = context
+            .Accreditations.AsNoTracking()
+            .Where(a => a.PartnershipSource == Source.Internal);
 
-    //  }
+        //! 2) Smart search for filter by submitted by email
+        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        {
+            var searchTerm = request.SearchTerm.Trim();
+            query = query.Where(a => EF.Functions.ILike(a.SubmittedByEmail, $"%{searchTerm}%"));
+        }
+
+        //! 3) Get total count of result
+        int total = await query.CountAsync();
+
+        //! 4) Apply pagination
+        int pageIndex = request.PageNumber - 1;
+        int pageSize = Math.Max(1, Math.Min(100, request.PageSize));
+
+        //! 5) Execute query
+        IEnumerable<InternalApplicationResponse> applications = await query
+            .OrderBy(a => a.SubmittedByEmail)
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize)
+            .Select(a => new InternalApplicationResponse
+            {
+                ApplicationId = a.ApplicationId,
+                BlueApplicationID = a.BlueApplicationID,
+                HubSpotApplicationID = a.HubSpotApplicationID,
+                BID = a.BID,
+                CompanyRecordID = a.CompanyRecordID,
+                SubmittedByEmail = a.SubmittedByEmail,
+                ApplicationStatusInternal = a.ApplicationStatusInternal.ToString(),
+            })
+            .ToListAsync();
+
+        //! 6) Return result
+        return new PaginatedResponse<InternalApplicationResponse>(
+            pageIndex,
+            pageSize,
+            total,
+            applications
+        );
+    }
+
+    public async Task<PaginatedResponse<ExternalApplicationResponse>> GetExternalData(
+        ExternalPaginationRequest request,
+        Source source
+    )
+    {
+        //! 1) Filter by source
+        var query = context.Accreditations.AsNoTracking().Where(a => a.PartnershipSource == source);
+
+        //! 2) Smart search for filter by submitted by email
+        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        {
+            var searchTerm = request.SearchTerm.Trim();
+            query = query.Where(a => EF.Functions.ILike(a.SubmittedByEmail, $"%{searchTerm}%"));
+        }
+
+        //! 3) Get total count of result
+        int total = await query.CountAsync();
+
+        //! 4) Apply pagination
+        int pageIndex = request.PageNumber - 1;
+        int pageSize = Math.Max(1, Math.Min(100, request.PageSize));
+
+        //! 5) Execute query
+        IEnumerable<ExternalApplicationResponse> applications = await query
+            .OrderBy(a => a.SubmittedByEmail)
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize)
+            .Select(a => new ExternalApplicationResponse
+            {
+                ApplicationId = a.ApplicationId,
+                CompanyName = a.BusinessName,
+                SubmittedByEmail = a.SubmittedByEmail,
+                ApplicationStatusExternal = a.ApplicationStatusExternal.ToString(),
+            })
+            .ToListAsync();
+
+        //! 6) Return result
+        return new PaginatedResponse<ExternalApplicationResponse>(
+            pageIndex,
+            pageSize,
+            total,
+            applications
+        );
+    }
 }

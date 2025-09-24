@@ -1,6 +1,10 @@
+using System.Security.Claims;
 using BBB_ApplicationDashboard.Application.DTOs;
+using BBB_ApplicationDashboard.Application.DTOs.Application;
+using BBB_ApplicationDashboard.Application.DTOs.Common;
 using BBB_ApplicationDashboard.Application.DTOs.PaginatedDtos;
 using BBB_ApplicationDashboard.Application.Interfaces;
+using BBB_ApplicationDashboard.Domain.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +35,27 @@ public class ApplicationController(IApplicationService applicationService) : Cus
         //TODO SEND TO SCV SERVER WITH SHAWKI-CHAN DATA
     }
 
-    // [HttpGet("internal-data")]
-    // public async Task<PaginatedResponse<>> GetInternalData(InternalPaginationRequest request) { }
+    [Authorize(Policy = "Internal")]
+    [HttpGet("internal-data")]
+    public async Task<IActionResult> GetInternalData([FromQuery] InternalPaginationRequest request)
+    {
+        var applications = await applicationService.GetInternalData(request);
+        return SucessResponse(applications);
+    }
+
+    [Authorize]
+    [HttpGet("external-data")]
+    public async Task<IActionResult> GetExternalData([FromQuery] ExternalPaginationRequest request)
+    {
+        var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        if (string.IsNullOrEmpty(roleClaim))
+            return Unauthorized();
+
+        if (!Enum.TryParse<Source>(roleClaim, ignoreCase: true, out var source))
+            return BadRequest();
+
+        var applications = await applicationService.GetExternalData(request, source);
+
+        return SucessResponse(applications);
+    }
 }
