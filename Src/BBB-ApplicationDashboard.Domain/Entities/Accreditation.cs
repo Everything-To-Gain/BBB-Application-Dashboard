@@ -12,9 +12,9 @@ public class Accreditation
     public string? HubSpotApplicationID { get; set; }
     public string? BID { get; set; }
     public string? CompanyRecordID { get; set; }
-
     public string TrackingLink { get; set; } = null!;
-    public ApplicationStatus ApplicationStatus { get; set; }
+    public ApplicationStatusInternal ApplicationStatusInternal { get; set; }
+    public ApplicationStatusExternal ApplicationStatusExternal { get; set; }
     public required string BusinessName { get; set; }
     public string? DoingBusinessAs { get; set; }
     public required string BusinessAddress { get; set; }

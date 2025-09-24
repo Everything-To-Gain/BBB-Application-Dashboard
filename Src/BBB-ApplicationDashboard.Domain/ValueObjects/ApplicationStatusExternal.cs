@@ -1,6 +1,6 @@
 namespace BBB_ApplicationDashboard.Domain.ValueObjects;
 
-public enum ApplicationStatus
+public enum ApplicationStatusExternal
 {
     Submitted,
     UnderReview,
