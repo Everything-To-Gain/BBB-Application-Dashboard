@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using BBB_ApplicationDashboard.Infrastructure.Services.Clients;
 
 namespace BBB_ApplicationDashboard.Api.Extensions;
@@ -167,7 +168,12 @@ public static class WebApplicationExtension
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         //? Core Services
-        services.AddControllers();
+        services
+            .AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
         services.AddProblemDetails();
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddOpenApi();

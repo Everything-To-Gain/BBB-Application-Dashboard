@@ -159,4 +159,20 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
             applications
         );
     }
+
+    public async Task<bool> UpdateApplicationStatus(
+        UpdateApplicationStatusRequest updateApplicationStatusRequest
+    )
+    {
+        var accreditation = await context.Accreditations.FirstOrDefaultAsync(a =>
+            a.BlueApplicationID == updateApplicationStatusRequest.BlueApplicationID
+        );
+        if (accreditation == null)
+            return false;
+        accreditation.ApplicationStatusInternal =
+            updateApplicationStatusRequest.ApplicationStatusInternal;
+        await context.SaveChangesAsync();
+        //TODO Need to update also the external status also
+        return true;
+    }
 }

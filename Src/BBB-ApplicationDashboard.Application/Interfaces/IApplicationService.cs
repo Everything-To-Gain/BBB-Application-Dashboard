@@ -17,4 +17,7 @@ public interface IApplicationService
         ExternalPaginationRequest request,
         Source source
     );
+    Task<bool> UpdateApplicationStatus(
+        UpdateApplicationStatusRequest updateApplicationStatusRequest
+    );
 }

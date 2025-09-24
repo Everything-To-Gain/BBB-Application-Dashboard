@@ -1,10 +1,6 @@
 using System.Security.Claims;
-using BBB_ApplicationDashboard.Application.DTOs;
 using BBB_ApplicationDashboard.Application.DTOs.Application;
-using BBB_ApplicationDashboard.Application.DTOs.Common;
 using BBB_ApplicationDashboard.Application.DTOs.PaginatedDtos;
-using BBB_ApplicationDashboard.Application.Interfaces;
-using BBB_ApplicationDashboard.Domain.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +16,7 @@ public class ApplicationController(
     public async Task<IActionResult> UpdateApplicationInfo(ApplicationInfo applicationInfo)
     {
         await applicationService.UpdateApplicationAsync(applicationInfo);
-        return SucessResponse("Application updated successfully");
+        return SucessResponseWithData("Application updated successfully");
     }
 
     [HttpPost("submit-form")]
@@ -33,7 +29,7 @@ public class ApplicationController(
             request,
             accreditationResponse.ApplicationId.ToString()
         );
-        return SucessResponse(
+        return SucessResponseWithData(
             data: new { applicationId = accreditationResponse.ApplicationId },
             message: accreditationResponse.IsDuplicate
                 ? "Duplicate application detected. Email sent with existing application details."
@@ -46,7 +42,7 @@ public class ApplicationController(
     public async Task<IActionResult> GetInternalData([FromQuery] InternalPaginationRequest request)
     {
         var applications = await applicationService.GetInternalData(request);
-        return SucessResponse(applications);
+        return SucessResponseWithData(applications);
     }
 
     [Authorize]
@@ -62,6 +58,20 @@ public class ApplicationController(
 
         var applications = await applicationService.GetExternalData(request, source);
 
-        return SucessResponse(applications);
+        return SucessResponseWithData(applications);
+    }
+
+    [Authorize]
+    [HttpPatch("update-application-status")]
+    public async Task<IActionResult> UpdateApplicationStatus(
+        UpdateApplicationStatusRequest updateApplicationStatusRequest
+    )
+    {
+        var result = await applicationService.UpdateApplicationStatus(
+            updateApplicationStatusRequest
+        );
+        return result
+            ? SucessResponse("Application status updated successfully")
+            : ErrorResponse("Application not found");
     }
 }
