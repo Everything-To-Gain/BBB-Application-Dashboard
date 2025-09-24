@@ -10,7 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BBB_ApplicationDashboard.Api.Controllers;
 
-public class ApplicationController(IApplicationService applicationService) : CustomControllerBase
+public class ApplicationController(
+    IApplicationService applicationService,
+    IMainServerClient mainServerClient
+) : CustomControllerBase
 {
     [Authorize]
     [HttpPost("update-application-info")]
@@ -23,16 +26,19 @@ public class ApplicationController(IApplicationService applicationService) : Cus
     [HttpPost("submit-form")]
     public async Task<IActionResult> SubmitApplicationForm(SubmittedDataRequest request)
     {
-        //! Create application in database
+        //!1)Create application in database
         var accreditationResponse = await applicationService.CreateApplicationAsync(request);
+        //!2)send to main server
+        await mainServerClient.SendFormData(
+            request,
+            accreditationResponse.ApplicationId.ToString()
+        );
         return SucessResponse(
             data: new { applicationId = accreditationResponse.ApplicationId },
             message: accreditationResponse.IsDuplicate
                 ? "Duplicate application detected. Email sent with existing application details."
                 : "Application submitted successfully and confirmation email sent"
         );
-
-        //TODO SEND TO SCV SERVER WITH SHAWKI-CHAN DATA
     }
 
     [Authorize(Policy = "Internal")]

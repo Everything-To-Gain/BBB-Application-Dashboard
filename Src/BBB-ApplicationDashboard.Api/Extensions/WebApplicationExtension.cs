@@ -1,35 +1,10 @@
-using System.Text;
-using BBB_ApplicationDashboard.Api.Middlewares;
-using BBB_ApplicationDashboard.Application.DTOs;
-using BBB_ApplicationDashboard.Application.Interfaces;
-using BBB_ApplicationDashboard.Domain.Entities;
-using BBB_ApplicationDashboard.Domain.ValueObjects;
-using BBB_ApplicationDashboard.Infrastructure.Configuration;
-using BBB_ApplicationDashboard.Infrastructure.Data.Context;
-using BBB_ApplicationDashboard.Infrastructure.Exceptions.Common;
-using BBB_ApplicationDashboard.Infrastructure.Services.Application;
-using BBB_ApplicationDashboard.Infrastructure.Services.Auth;
-using BBB_ApplicationDashboard.Infrastructure.Services.Email;
-using BBB_ApplicationDashboard.Infrastructure.Services.Security;
-using BBB_ApplicationDashboard.Infrastructure.Services.Tob;
-using BBB_ApplicationDashboard.Infrastructure.Services.User;
-using Infisical.Sdk;
-using Mapster;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using MongoDB.Driver;
-using Scalar.AspNetCore;
-using Serilog;
-using Serilog.Events;
+using BBB_ApplicationDashboard.Infrastructure.Services.Clients;
 
 namespace BBB_ApplicationDashboard.Api.Extensions;
 
 public static class WebApplicationExtension
 {
-    private const string CorsPolicy = "Angular Cors";
-
+    //!1️⃣ Secrets & Config
     public static IServiceCollection AddSecretManager(this IServiceCollection services)
     {
         services.AddSingleton(_ =>
@@ -41,6 +16,7 @@ public static class WebApplicationExtension
                 throw new InvalidOperationException(
                     "💥 Infisical credentials not configured in environment variables."
                 );
+
             var settings = new ClientSettings
             {
                 Auth = new AuthenticationOptions
@@ -59,6 +35,7 @@ public static class WebApplicationExtension
         return services;
     }
 
+    //!2️⃣ Logging config
     public static void ConfigureSerilog(this WebApplicationBuilder builder)
     {
         var isDevelopment = builder.Environment.IsDevelopment();
@@ -90,43 +67,15 @@ public static class WebApplicationExtension
         builder.Host.UseSerilog();
     }
 
-    public static WebApplication UseRequestLogging(this WebApplication app)
-    {
-        app.UseSerilogRequestLogging(options =>
-        {
-            options.MessageTemplate =
-                "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
-            options.GetLevel = (httpContext, elapsed, ex) =>
-            {
-                var elapsedMs = elapsed;
-                if (elapsedMs > 240000)
-                    return LogEventLevel.Fatal;
-                if (elapsedMs > 120000)
-                    return LogEventLevel.Warning;
-                if (ex != null || httpContext.Response.StatusCode >= 500)
-                    return LogEventLevel.Error;
-                return LogEventLevel.Information;
-            };
-
-            options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
-            {
-                diagnosticContext.Set("RequestPath", httpContext.Request.Path);
-                diagnosticContext.Set("RequestMethod", httpContext.Request.Method);
-                diagnosticContext.Set("StatusCode", httpContext.Response.StatusCode);
-            };
-        });
-        return app;
-    }
-
+    //!3️⃣ Database config
     public static IServiceCollection AddDatabase(this IServiceCollection services)
     {
-        //! configure the postgre database
-
+        // PostgreSQL Configuration
         services.AddDbContext<ApplicationDbContext>(
             (serviceProvider, options) =>
             {
-                var SecretService = serviceProvider.GetRequiredService<ISecretService>();
-                var connectionString = SecretService.GetSecret(
+                var secretService = serviceProvider.GetRequiredService<ISecretService>();
+                var connectionString = secretService.GetSecret(
                     ProjectSecrets.ApplicationConnectionString,
                     Folders.ConnectionStrings
                 );
@@ -134,14 +83,7 @@ public static class WebApplicationExtension
             }
         );
 
-        //     services.AddNpgsqlDataSource(,
-        // dataSourceBuilder =>
-        // {
-        //     // 👇 This enables dynamic JSON serialization (System.Text.Json) for arbitrary types
-        //     dataSourceBuilder.EnableDynamicJson();
-        // });
-
-        //! configure the monogdb database
+        //? MongoDB Configuration
         services.AddSingleton<IMongoClient>(serviceProvider =>
         {
             var secrets = serviceProvider.GetRequiredService<ISecretService>();
@@ -158,6 +100,7 @@ public static class WebApplicationExtension
         return services;
     }
 
+    //!4️⃣ Authentication & authorization
     public static IServiceCollection AddAuth(this IServiceCollection services)
     {
         var secretService = services.BuildServiceProvider().GetRequiredService<ISecretService>();
@@ -220,41 +163,44 @@ public static class WebApplicationExtension
         return services;
     }
 
+    //!5️⃣ Services DI
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
+        //? Core Services
         services.AddControllers();
         services.AddProblemDetails();
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddOpenApi();
+        services.AddHttpClient();
 
-        //? Email services
+        //? Email Services
         services.AddOptions<EmailOptions>().BindConfiguration("Email");
         services.AddSingleton(sp => sp.GetRequiredService<IOptions<EmailOptions>>().Value);
         services.AddScoped<IEmailService, EmailService>();
 
-        //? Application services
+        //? Business Services
         services.AddScoped<IApplicationService, ApplicationService>();
-
-        //? tob service
         services.AddScoped<ITobService, TobService>();
-
-        //? user service
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IAuthService, AuthService>();
 
-        //? Configure Mapster
+        //? Client Services
+        services.AddScoped<IMainServerClient, MainServerClient>();
+
+        //? Object Mapping
         ConfigureMapster();
 
         return services;
     }
 
+    //!6️⃣ Cors configuration
     public static IServiceCollection AddApplicationCors(this IServiceCollection services)
     {
         services.AddCors(options =>
         {
             options.AddPolicy(
-                CorsPolicy,
+                "Angular Cors",
                 policy =>
                     policy
                         .WithOrigins(
@@ -269,6 +215,7 @@ public static class WebApplicationExtension
         return services;
     }
 
+    //!7️⃣ Application build setup
     public static void AddApplication(this WebApplicationBuilder builder)
     {
         builder.ConfigureSerilog();
@@ -280,37 +227,43 @@ public static class WebApplicationExtension
             .AddAuth();
     }
 
+    //!8️⃣ middleware pipeline
+    public static WebApplication UseRequestLogging(this WebApplication app)
+    {
+        app.UseSerilogRequestLogging(options =>
+        {
+            options.MessageTemplate =
+                "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+            options.GetLevel = (httpContext, elapsed, ex) =>
+            {
+                var elapsedMs = elapsed;
+                if (elapsedMs > 240000)
+                    return LogEventLevel.Fatal;
+                if (elapsedMs > 120000)
+                    return LogEventLevel.Warning;
+                if (ex != null || httpContext.Response.StatusCode >= 500)
+                    return LogEventLevel.Error;
+                return LogEventLevel.Information;
+            };
+            options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+            {
+                diagnosticContext.Set("RequestPath", httpContext.Request.Path);
+                diagnosticContext.Set("RequestMethod", httpContext.Request.Method);
+                diagnosticContext.Set("StatusCode", httpContext.Response.StatusCode);
+            };
+        });
+        return app;
+    }
+
     public static WebApplication UseHttpsAndErrorHandling(this WebApplication app)
     {
-        // app.UseHttpsRedirection();
         app.UseExceptionHandler();
         return app;
     }
 
-    public static async Task<IApplicationBuilder> UseMigrationAsync(this IApplicationBuilder app)
+    public static WebApplication UseAppCors(this WebApplication app)
     {
-        using var scope = app.ApplicationServices.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        try
-        {
-            await dbContext.Database.EnsureCreatedAsync();
-
-            // await dbContext.Database.MigrateAsync();
-        }
-        catch (Exception)
-        {
-            try
-            {
-                await dbContext.Database.EnsureCreatedAsync();
-            }
-            catch (Exception createEx)
-            {
-                Console.WriteLine($"❌ Database creation failed: {createEx.Message}");
-                throw;
-            }
-        }
-
+        app.UseCors("Angular Cors");
         return app;
     }
 
@@ -323,6 +276,7 @@ public static class WebApplicationExtension
         return app;
     }
 
+    //!9️⃣ Api docs
     public static WebApplication UseApiDocs(this WebApplication app)
     {
         app.MapOpenApi();
@@ -348,6 +302,34 @@ public static class WebApplicationExtension
         return app;
     }
 
+    //!🔟 Database migration
+    public static async Task<IApplicationBuilder> UseMigrationAsync(this IApplicationBuilder app)
+    {
+        using var scope = app.ApplicationServices.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        try
+        {
+            await dbContext.Database.EnsureCreatedAsync();
+            await dbContext.Database.MigrateAsync();
+        }
+        catch (Exception)
+        {
+            try
+            {
+                await dbContext.Database.EnsureCreatedAsync();
+            }
+            catch (Exception createEx)
+            {
+                Console.WriteLine($"❌ Database creation failed: {createEx.Message}");
+                throw;
+            }
+        }
+
+        return app;
+    }
+
+    //!1️⃣1️⃣ Pipeline Orchestration
     public static WebApplication UseApplicationPipeline(this WebApplication app)
     {
         return app.UseRequestLogging()
@@ -357,12 +339,7 @@ public static class WebApplicationExtension
             .UseApiDocs();
     }
 
-    public static WebApplication UseAppCors(this WebApplication app)
-    {
-        app.UseCors(CorsPolicy);
-        return app;
-    }
-
+    //!1️⃣2️⃣ Mapster config
     private static void ConfigureMapster()
     {
         TypeAdapterConfig<Accreditation, AccreditationResponse>.NewConfig();

@@ -1,6 +1,3 @@
-using BBB_ApplicationDashboard.Application.Interfaces;
-using BBB_ApplicationDashboard.Domain.Entities;
-using BBB_ApplicationDashboard.Domain.ValueObjects;
 using BBB_ApplicationDashboard.Infrastructure.Exceptions.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +16,6 @@ namespace BBB_ApplicationDashboard.Api.Controllers
         [HttpGet("google-login")]
         public IActionResult GoogleLogin() => Redirect(authService.GetGoogleLoginURI().ToString());
 
-        // [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet("google-callback")]
         public async Task<IActionResult> GoogleCallbackServer(
             [FromQuery] string code,
