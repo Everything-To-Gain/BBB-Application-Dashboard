@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using BBB_ApplicationDashboard.Domain.ValueObjects;
 
 namespace BBB_ApplicationDashboard.Domain.Entities;
 
@@ -11,6 +12,5 @@ public class User
     [EmailAddress]
     [Required(ErrorMessage = "A user cannot exist without email address!")]
     public required string Email { get; set; }
-    public bool IsAdmin { get; set; } = false;
-    public bool IsBasic { get; set; } = false;
+    public required Source UserSource { get; set; }
 }

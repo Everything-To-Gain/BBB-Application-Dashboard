@@ -23,8 +23,7 @@ public class JwtTokenService(ISecretService secretService) : IJwtTokenService
         List<Claim> claims =
         [
             new(ClaimTypes.Email, user.Email),
-            new("AdminRole", user.IsAdmin.ToString().ToLower()),
-            new("BasicRole", user.IsBasic.ToString().ToLower()),
+            new(ClaimTypes.Role, user.UserSource.ToString().ToLower()),
         ];
 
         //!3) Token descriptor

@@ -4,10 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BBB_ApplicationDashboard.Api.Controllers;
 
-public class ApplicationController(
-    IEmailService emailService,
-    IApplicationService applicationService
-) : CustomControllerBase
+public class ApplicationController(IApplicationService applicationService) : CustomControllerBase
 {
     [HttpPost("update-application-info")]
     public async Task<IActionResult> UpdateApplicationInfo(ApplicationInfo applicationInfo)
@@ -29,7 +26,6 @@ public class ApplicationController(
         );
 
         //TODO SEND TO SCV SERVER WITH SHAWKI-CHAN DATA
-        return SucessResponse(data: new { applicationId = accreditationResponse.ApplicationId });
     }
 
     // [HttpPost("test-email")]

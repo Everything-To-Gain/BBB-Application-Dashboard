@@ -1,5 +1,6 @@
 using BBB_ApplicationDashboard.Application.Interfaces;
 using BBB_ApplicationDashboard.Domain.Entities;
+using BBB_ApplicationDashboard.Domain.ValueObjects;
 using BBB_ApplicationDashboard.Infrastructure.Exceptions.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -40,12 +41,7 @@ namespace BBB_ApplicationDashboard.Api.Controllers
 
             if (user is null)
             {
-                user = new User()
-                {
-                    Email = payload.Email,
-                    IsAdmin = false,
-                    IsBasic = true,
-                };
+                user = new User() { Email = payload.Email, UserSource = Source.Internal };
                 await userService.CreateUser(user);
             }
 
@@ -113,12 +109,7 @@ namespace BBB_ApplicationDashboard.Api.Controllers
 
             if (user is null)
             {
-                user = new User()
-                {
-                    Email = email,
-                    IsAdmin = false,
-                    IsBasic = true,
-                };
+                user = new User() { Email = email, UserSource = Source.Internal };
                 await userService.CreateUser(user);
             }
 

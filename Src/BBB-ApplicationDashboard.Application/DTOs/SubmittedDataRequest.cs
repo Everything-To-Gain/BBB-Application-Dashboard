@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using BBB_ApplicationDashboard.Domain.Entities;
+using BBB_ApplicationDashboard.Domain.ValueObjects;
 
 namespace BBB_ApplicationDashboard.Application.DTOs;
 
@@ -66,9 +67,7 @@ public class SubmittedDataRequest
     [Required(ErrorMessage = "Primary contact email is required!")]
     [Phone]
     public required string PrimaryContactNumber { get; set; }
-
     public string? PreferredContactMethod { get; set; }
-
     public List<string> PrimaryContactTypes { get; set; } = [];
     public string? SecondaryFirstName { get; set; }
     public string? SecondaryLastName { get; set; }
@@ -76,7 +75,6 @@ public class SubmittedDataRequest
     public string? SecondaryEmail { get; set; }
     public List<string> SecondaryContactTypes { get; set; } = [];
 
-    [Phone]
     public string? SecondaryPhone { get; set; }
     public string? SecondaryPreferredContactMethod { get; set; }
 
@@ -101,7 +99,7 @@ public class SubmittedDataRequest
     [Required(ErrorMessage = "Number of full time employees is required!")]
     public required int NumberOfFullTimeEmployees { get; set; }
 
-    public required int NumberOfPartTimeEmployees { get; set; }
+    public int? NumberOfPartTimeEmployees { get; set; }
 
     [Required(ErrorMessage = "Gross annual revenue is required!")]
     public required int GrossAnnualRevenue { get; set; }
@@ -119,4 +117,7 @@ public class SubmittedDataRequest
 
     [Required(ErrorMessage = "Sumbitted by email is required!")]
     public required string SubmittedByEmail { get; set; }
+
+    [Required(ErrorMessage = "Partnership source is required!")]
+    public required Source PartnershipSource { get; set; }
 }
