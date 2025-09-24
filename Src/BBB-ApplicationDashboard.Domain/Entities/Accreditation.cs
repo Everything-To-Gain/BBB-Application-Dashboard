@@ -82,7 +82,7 @@ public class Accreditation
 
     public required int NumberOfPartTimeEmployees { get; set; }
 
-    public required int GrossAnnualRevenue { get; set; }
+    public required long GrossAnnualRevenue { get; set; }
 
     public required string AvgCustomersPerYear { get; set; }
 

@@ -102,7 +102,7 @@ public class SubmittedDataRequest
     public int? NumberOfPartTimeEmployees { get; set; }
 
     [Required(ErrorMessage = "Gross annual revenue is required!")]
-    public required int GrossAnnualRevenue { get; set; }
+    public required long GrossAnnualRevenue { get; set; }
 
     [Required(ErrorMessage = "Average customer per year is required!")]
     public required string AvgCustomersPerYear { get; set; }
