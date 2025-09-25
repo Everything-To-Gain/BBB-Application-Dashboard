@@ -71,9 +71,7 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
     )
     {
         //! 1) Filter by source internal
-        var query = context
-            .Accreditations.AsNoTracking()
-            .Where(a => a.PartnershipSource == Source.Internal);
+        var query = context.Accreditations.AsNoTracking();
 
         //! 2) Smart search for filter by submitted by email
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
