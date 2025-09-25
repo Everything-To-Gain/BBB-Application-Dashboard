@@ -20,4 +20,6 @@ public interface IApplicationService
     Task<bool> UpdateApplicationStatus(
         UpdateApplicationStatusRequest updateApplicationStatusRequest
     );
+
+    Task<Accreditation> GetApplicationById(Guid id);
 }

@@ -56,5 +56,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 v => JsonSerializer.Deserialize<List<License>>(v, options) ?? new List<License>()
             )
             .HasColumnType("jsonb");
+
+        modelBuilder.Entity<Accreditation>().HasIndex(a => a.ApplicationNumber).IsUnique();
     }
 }

@@ -26,6 +26,17 @@ public class JwtTokenService(ISecretService secretService) : IJwtTokenService
             new(ClaimTypes.Role, user.UserSource.ToString()),
         ];
 
+        // ✅ special emails
+        var specialEmails = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "patrick.giese@thebbb.org",
+            "aaron.costilla@thebbb.org",
+            "yousef.shawky@everythingtogain.com",
+        };
+
+        if (specialEmails.Contains(user.Email))
+            claims.Add(new Claim("SpecialAccess", "true"));
+
         //!3) Token descriptor
         SecurityTokenDescriptor tokenDescriptor = new()
         {

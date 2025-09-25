@@ -45,6 +45,25 @@ public class ApplicationController(
         return SucessResponseWithData(applications);
     }
 
+    [Authorize(Policy = "Internal")]
+    [HttpGet("application-internal-status")]
+    public IActionResult GetApplicationInternalStatus()
+    {
+        var statuses = Enum.GetValues<ApplicationStatusInternal>()
+            .Cast<ApplicationStatusInternal>()
+            .Select(e => new { Id = (int)e, Name = e.ToString() })
+            .ToList();
+        return SucessResponseWithData(statuses);
+    }
+
+    [Authorize(Policy = "Internal")]
+    [HttpGet("internal-data/{id}")]
+    public async Task<IActionResult> GetApplicationDetails(Guid id)
+    {
+        var applicationDetails = await applicationService.GetApplicationById(id);
+        return SucessResponseWithData(applicationDetails);
+    }
+
     [Authorize]
     [HttpGet("external-data")]
     public async Task<IActionResult> GetExternalData([FromQuery] ExternalPaginationRequest request)
@@ -59,6 +78,17 @@ public class ApplicationController(
         var applications = await applicationService.GetExternalData(request, source);
 
         return SucessResponseWithData(applications);
+    }
+
+    [Authorize]
+    [HttpGet("application-external-status")]
+    public IActionResult GetApplicationExternalStatus()
+    {
+        var statuses = Enum.GetValues<ApplicationStatusExternal>()
+            .Cast<ApplicationStatusExternal>()
+            .Select(e => new { Id = (int)e, Name = e.ToString() })
+            .ToList();
+        return SucessResponseWithData(statuses);
     }
 
     [Authorize]

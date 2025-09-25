@@ -11,4 +11,5 @@ public class InternalApplicationResponse
     public string? CompanyRecordID { get; set; }
     public string? SubmittedByEmail { get; set; }
     public string? ApplicationStatusInternal { get; set; }
+    public string? ApplicationStatusExternal { get; set; }
 }

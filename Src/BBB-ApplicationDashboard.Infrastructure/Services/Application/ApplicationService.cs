@@ -5,6 +5,7 @@ using BBB_ApplicationDashboard.Application.Interfaces;
 using BBB_ApplicationDashboard.Domain.Entities;
 using BBB_ApplicationDashboard.Domain.ValueObjects;
 using BBB_ApplicationDashboard.Infrastructure.Data.Context;
+using BBB_ApplicationDashboard.Infrastructure.Exceptions.Common;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,7 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
         var applicationsThisYear = await context.Accreditations.CountAsync(a =>
             a.SubmittedByEmail != null
         );
+
         var applicationNumber = $"BBB-{DateTime.Now.Year}-ACC-{applicationsThisYear + 1:D4}";
 
         Accreditation accreditation = request.Adapt<Accreditation>();
@@ -80,6 +82,12 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
             query = query.Where(a => EF.Functions.ILike(a.SubmittedByEmail, $"%{searchTerm}%"));
         }
 
+        if (request.InternalStatus is not null)
+            query = query.Where(a => a.ApplicationStatusInternal == request.InternalStatus);
+
+        if (request.ExternalStatus is not null)
+            query = query.Where(a => a.ApplicationStatusExternal == request.ExternalStatus);
+
         //! 3) Get total count of result
         int total = await query.CountAsync();
 
@@ -101,6 +109,7 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
                 CompanyRecordID = a.CompanyRecordID,
                 SubmittedByEmail = a.SubmittedByEmail,
                 ApplicationStatusInternal = a.ApplicationStatusInternal.ToString(),
+                ApplicationStatusExternal = a.ApplicationStatusExternal.ToString(),
             })
             .ToListAsync();
 
@@ -127,6 +136,9 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
             var searchTerm = request.SearchTerm.Trim();
             query = query.Where(a => EF.Functions.ILike(a.SubmittedByEmail, $"%{searchTerm}%"));
         }
+
+        if (request.ExternalStatus is not null)
+            query = query.Where(a => a.ApplicationStatusExternal == request.ExternalStatus);
 
         //! 3) Get total count of result
         int total = await query.CountAsync();
@@ -156,6 +168,14 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
             total,
             applications
         );
+    }
+
+    public async Task<Accreditation> GetApplicationById(Guid id)
+    {
+        var accreditation =
+            await context.Accreditations.FirstOrDefaultAsync(a => a.ApplicationId == id)
+            ?? throw new NotFoundException("application not found");
+        return accreditation;
     }
 
     public async Task<bool> UpdateApplicationStatus(
