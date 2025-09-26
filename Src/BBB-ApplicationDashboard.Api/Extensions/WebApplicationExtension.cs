@@ -212,7 +212,7 @@ public static class WebApplicationExtension
                         .WithOrigins(
                             "http://localhost:4201",
                             "https://localhost:4201",
-                            "https://joinbbb.org"
+                            "https://bbb-partners.playdough.co"
                         )
                         .AllowAnyHeader()
                         .AllowAnyMethod()
