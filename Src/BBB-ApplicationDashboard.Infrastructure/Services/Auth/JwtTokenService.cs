@@ -31,6 +31,7 @@ public class JwtTokenService(ISecretService secretService) : IJwtTokenService
         {
             "patrick.giese@thebbb.org",
             "aaron.costilla@thebbb.org",
+            "ahmad.mahfouz@everythingtogain.com",
             "yousef.shawky@everythingtogain.com",
         };
 
