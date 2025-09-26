@@ -35,7 +35,7 @@ public class JwtTokenService(ISecretService secretService) : IJwtTokenService
         };
 
         if (specialEmails.Contains(user.Email))
-            claims.Add(new Claim("SpecialAccess", "true"));
+            claims.Add(new Claim("specialAccess", "true"));
 
         //!3) Token descriptor
         SecurityTokenDescriptor tokenDescriptor = new()

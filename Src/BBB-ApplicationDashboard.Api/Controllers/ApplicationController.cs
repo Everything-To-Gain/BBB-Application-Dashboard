@@ -64,6 +64,16 @@ public class ApplicationController(
         return SucessResponseWithData(applicationDetails);
     }
 
+    [Authorize(Policy = "Internal")]
+    [HttpPost("{applicationId}/send-form-data")]
+    public async Task<IActionResult> SendCSVFormData(Guid applicationId)
+    {
+        var applicationDetails = await applicationService.GetApplicationById(applicationId);
+        var request = applicationDetails.Adapt<SubmittedDataRequest>();
+        await mainServerClient.SendFormData(request, applicationDetails.ApplicationId.ToString());
+        return SucessResponse();
+    }
+
     [Authorize]
     [HttpGet("external-data")]
     public async Task<IActionResult> GetExternalData([FromQuery] ExternalPaginationRequest request)
