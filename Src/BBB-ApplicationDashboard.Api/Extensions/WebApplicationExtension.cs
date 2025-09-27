@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using BBB_ApplicationDashboard.Infrastructure.Services.Audit;
 using BBB_ApplicationDashboard.Infrastructure.Services.Clients;
 
 namespace BBB_ApplicationDashboard.Api.Extensions;
@@ -186,6 +187,7 @@ public static class WebApplicationExtension
 
         //? Business Services
         services.AddScoped<IApplicationService, ApplicationService>();
+        services.AddScoped<IAuditService, AuditService>();
         services.AddScoped<ITobService, TobService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
