@@ -162,11 +162,6 @@ Icon
 *.sqlite
 *.sqlite3
 
-# Entity Framework
-**/Migrations/*.cs
-**/Migrations/*.Designer.cs
-!**/Migrations/InitialCreate.cs
-
 # Database backups
 *.bak
 *.backup
