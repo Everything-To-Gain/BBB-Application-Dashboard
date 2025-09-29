@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using BBB_ApplicationDashboard.Infrastructure.Services.Audit;
 using BBB_ApplicationDashboard.Infrastructure.Services.Clients;
 
 namespace BBB_ApplicationDashboard.Api.Extensions;
@@ -72,8 +73,7 @@ public static class WebApplicationExtension
     public static IServiceCollection AddDatabase(this IServiceCollection services)
     {
         // PostgreSQL Configuration
-        services.AddDbContext<ApplicationDbContext>(
-            (serviceProvider, options) =>
+        services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
             {
                 var secretService = serviceProvider.GetRequiredService<ISecretService>();
                 var connectionString = secretService.GetSecret(
@@ -186,6 +186,7 @@ public static class WebApplicationExtension
 
         //? Business Services
         services.AddScoped<IApplicationService, ApplicationService>();
+        services.AddScoped<IAuditService, AuditService>();
         services.AddScoped<ITobService, TobService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
@@ -209,11 +210,7 @@ public static class WebApplicationExtension
                 "Angular Cors",
                 policy =>
                     policy
-                        .WithOrigins(
-                            "http://localhost:4201",
-                            "https://localhost:4201",
-                            "https://betteryourbusiness.co"
-                        )
+                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
             );

@@ -8,6 +8,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     : DbContext(options)
 {
     public DbSet<Accreditation> Accreditations { get; set; }
+    public DbSet<ActivityEvent> ActivityEvents => Set<ActivityEvent>();
 
     public DbSet<User> Users { get; set; }
 
