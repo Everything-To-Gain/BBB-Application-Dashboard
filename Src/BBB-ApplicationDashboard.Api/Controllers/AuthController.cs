@@ -37,8 +37,9 @@ namespace BBB_ApplicationDashboard.Api.Controllers
             //! Don't create user
             if (user is null)
             {
-                user = new User() { Email = payload.Email, UserSource = Source.Internal };
-                await userService.CreateUser(user);
+                return Unauthorized();
+                // user = new User() { Email = payload.Email, UserSource = Source.Internal };
+                // await userService.CreateUser(user);
             }
 
             //! 3. Delegate cookie and token creation to handlers
@@ -106,8 +107,9 @@ namespace BBB_ApplicationDashboard.Api.Controllers
             //! Don't create user
             if (user is null)
             {
-                user = new User() { Email = email, UserSource = Source.Internal };
-                await userService.CreateUser(user);
+                return Unauthorized();
+                // user = new User() { Email = email, UserSource = Source.Internal };
+                // await userService.CreateUser(user);
             }
 
             //! 3. Delegate cookie and token creation to handlers

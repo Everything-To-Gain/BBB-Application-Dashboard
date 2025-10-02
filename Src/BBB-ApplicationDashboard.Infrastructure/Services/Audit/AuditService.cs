@@ -91,13 +91,18 @@ namespace BBB_ApplicationDashboard.Infrastructure.Services.Audit
             var actions = await context
                 .ActivityEvents.Select(ae => ae.Action)
                 .Distinct()
+                .OrderBy(a => a)
                 .ToListAsync();
             return actions;
         }
 
         public async Task<List<string>> GetUsers()
         {
-            var users = await context.ActivityEvents.Select(ae => ae.User).Distinct().ToListAsync();
+            var users = await context
+                .ActivityEvents.Select(ae => ae.User)
+                .Distinct()
+                .OrderBy(u => u)
+                .ToListAsync();
             return users;
         }
 
@@ -106,6 +111,7 @@ namespace BBB_ApplicationDashboard.Infrastructure.Services.Audit
             var entities = await context
                 .ActivityEvents.Select(ae => ae.Entity)
                 .Distinct()
+                .OrderBy(e => e)
                 .ToListAsync();
             return entities;
         }
@@ -115,6 +121,7 @@ namespace BBB_ApplicationDashboard.Infrastructure.Services.Audit
             var statuses = await context
                 .ActivityEvents.Select(ae => ae.Status)
                 .Distinct()
+                .OrderBy(s => s)
                 .ToListAsync();
             return statuses;
         }
@@ -124,6 +131,7 @@ namespace BBB_ApplicationDashboard.Infrastructure.Services.Audit
             var userVersions = await context
                 .ActivityEvents.Select(ae => ae.UserVersion)
                 .Distinct()
+                .OrderByDescending(v => v)
                 .ToListAsync();
             return userVersions;
         }
