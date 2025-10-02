@@ -34,6 +34,7 @@ namespace BBB_ApplicationDashboard.Api.Controllers
             //! 2. Find user
             User? user = await userService.FindUser(payload.Email);
 
+            //! Don't create user
             if (user is null)
             {
                 user = new User() { Email = payload.Email, UserSource = Source.Internal };
@@ -102,6 +103,7 @@ namespace BBB_ApplicationDashboard.Api.Controllers
 
             User? user = await userService.FindUser(email);
 
+            //! Don't create user
             if (user is null)
             {
                 user = new User() { Email = email, UserSource = Source.Internal };

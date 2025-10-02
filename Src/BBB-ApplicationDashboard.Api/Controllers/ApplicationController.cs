@@ -16,7 +16,7 @@ public class ApplicationController(
     public async Task<IActionResult> UpdateApplicationInfo(ApplicationInfo applicationInfo)
     {
         await applicationService.UpdateApplicationAsync(applicationInfo);
-        return SucessResponseWithData("Application updated successfully");
+        return SuccessResponseWithData("Application updated successfully");
     }
 
     [HttpPost("submit-form")]
@@ -29,7 +29,7 @@ public class ApplicationController(
             request,
             accreditationResponse.ApplicationId.ToString()
         );
-        return SucessResponseWithData(
+        return SuccessResponseWithData(
             data: new { applicationId = accreditationResponse.ApplicationId },
             message: accreditationResponse.IsDuplicate
                 ? "Duplicate application detected. Email sent with existing application details."
@@ -42,7 +42,7 @@ public class ApplicationController(
     public async Task<IActionResult> GetInternalData([FromQuery] InternalPaginationRequest request)
     {
         var applications = await applicationService.GetInternalData(request);
-        return SucessResponseWithData(applications);
+        return SuccessResponseWithData(applications);
     }
 
     [Authorize(Policy = "Internal")]
@@ -53,7 +53,7 @@ public class ApplicationController(
             .Cast<ApplicationStatusInternal>()
             .Select(e => new { Id = (int)e, Name = e.ToString() })
             .ToList();
-        return SucessResponseWithData(statuses);
+        return SuccessResponseWithData(statuses);
     }
 
     [Authorize(Policy = "Internal")]
@@ -61,7 +61,7 @@ public class ApplicationController(
     public async Task<IActionResult> GetApplicationDetails(Guid id)
     {
         var applicationDetails = await applicationService.GetApplicationById(id);
-        return SucessResponseWithData(applicationDetails);
+        return SuccessResponseWithData(applicationDetails);
     }
 
     [Authorize(Policy = "Internal")]
@@ -71,7 +71,7 @@ public class ApplicationController(
         var applicationDetails = await applicationService.GetApplicationById(applicationId);
         var request = applicationDetails.Adapt<SubmittedDataRequest>();
         await mainServerClient.SendFormData(request, applicationDetails.ApplicationId.ToString());
-        return SucessResponse();
+        return SuccessResponse();
     }
 
     [Authorize]
@@ -87,7 +87,7 @@ public class ApplicationController(
 
         var applications = await applicationService.GetExternalData(request, source);
 
-        return SucessResponseWithData(applications);
+        return SuccessResponseWithData(applications);
     }
 
     [Authorize]
@@ -98,7 +98,7 @@ public class ApplicationController(
             .Cast<ApplicationStatusExternal>()
             .Select(e => new { Id = (int)e, Name = e.ToString() })
             .ToList();
-        return SucessResponseWithData(statuses);
+        return SuccessResponseWithData(statuses);
     }
 
     [Authorize]
@@ -111,7 +111,7 @@ public class ApplicationController(
             updateApplicationStatusRequest
         );
         return result
-            ? SucessResponse("Application status updated successfully")
+            ? SuccessResponse("Application status updated successfully")
             : ErrorResponse("Application not found");
     }
 }

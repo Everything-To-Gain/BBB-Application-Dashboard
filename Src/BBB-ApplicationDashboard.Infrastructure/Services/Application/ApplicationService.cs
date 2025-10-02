@@ -72,7 +72,7 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
         InternalPaginationRequest request
     )
     {
-        //! 1) Filter by source internal
+        //! 1) Get all accreditations
         var query = context.Accreditations.AsNoTracking();
 
         //! 2) Smart search for filter by submitted by email

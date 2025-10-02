@@ -7,7 +7,7 @@ namespace BBB_ApplicationDashboard.Api.Controllers;
 [Route("api/[controller]")]
 public class CustomControllerBase : ControllerBase
 {
-    protected IActionResult SucessResponseWithData<T>(
+    protected IActionResult SuccessResponseWithData<T>(
         T? data,
         string? message = "The operation done successfully"
     )
@@ -37,7 +37,7 @@ public class CustomControllerBase : ControllerBase
         );
     }
 
-    protected IActionResult SucessResponse(string? message = "The operation done successfully")
+    protected IActionResult SuccessResponse(string? message = "The operation done successfully")
     {
         return Ok(
             new APIResponse<object>

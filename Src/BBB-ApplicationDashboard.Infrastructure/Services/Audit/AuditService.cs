@@ -1,12 +1,10 @@
-﻿using BBB_ApplicationDashboard.Application.Interfaces;
+﻿using BBB_ApplicationDashboard.Application.DTOs.Audit;
+using BBB_ApplicationDashboard.Application.DTOs.PaginatedDtos;
+using BBB_ApplicationDashboard.Application.Interfaces;
 using BBB_ApplicationDashboard.Domain.Entities;
 using BBB_ApplicationDashboard.Infrastructure.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace BBB_ApplicationDashboard.Infrastructure.Services.Audit
 {
@@ -18,23 +16,11 @@ namespace BBB_ApplicationDashboard.Infrastructure.Services.Audit
             await context.SaveChangesAsync();
         }
 
-        public async Task<List<ActivityEvent>> GetActivityEvents(int page = 1, int pageSize = 10)
-        {
-            return await context.ActivityEvents
-                .OrderByDescending(ae => ae.Timestamp)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-        }
-
-        public async Task<int> GetTotalActivityEventCount()
-        {
-            return await context.ActivityEvents.CountAsync();
-        }
         public async Task<ActivityEvent?> GetActivityEventById(Guid id)
         {
             return await context.ActivityEvents.FirstOrDefaultAsync(ae => ae.Id == id);
         }
+
         public async Task DeleteActivityEvent(Guid id)
         {
             var activityEvent = await context.ActivityEvents.FirstOrDefaultAsync(ae => ae.Id == id);
@@ -44,20 +30,102 @@ namespace BBB_ApplicationDashboard.Infrastructure.Services.Audit
                 await context.SaveChangesAsync();
             }
         }
+
         public async Task DeleteAllActivityEvents()
         {
             var allEvents = context.ActivityEvents;
             context.ActivityEvents.RemoveRange(allEvents);
             await context.SaveChangesAsync();
         }
+
+        public async Task<PaginatedResponse<SimpleAuditResponse>> GetAllFilteredActivityEvents(
+            AuditPaginationRequest request
+        )
+        {
+            var query = context.ActivityEvents.AsQueryable();
+
+            // Apply requests dynamically
+            if (!string.IsNullOrEmpty(request.User))
+                query = query.Where(ae => ae.User == request.User);
+
+            if (!string.IsNullOrEmpty(request.Action))
+                query = query.Where(ae => ae.Action == request.Action);
+
+            if (!string.IsNullOrEmpty(request.Entity))
+                query = query.Where(ae => ae.Entity == request.Entity);
+
+            if (!string.IsNullOrEmpty(request.Status))
+                query = query.Where(ae => ae.Status == request.Status);
+
+            if (request.FromDate.HasValue)
+                query = query.Where(ae => ae.Timestamp >= request.FromDate.Value);
+
+            if (request.ToDate.HasValue)
+                query = query.Where(ae => ae.Timestamp <= request.ToDate.Value);
+
+            var count = await query.CountAsync();
+            int pageIndex = request.PageNumber - 1;
+            int pageSize = Math.Max(1, Math.Min(100, request.PageSize));
+
+            var audits = await query
+                .OrderByDescending(ae => ae.Timestamp)
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .Select(ae => new SimpleAuditResponse
+                {
+                    Id = ae.Id,
+                    User = ae.User,
+                    Action = ae.Action,
+                    Timestamp = ae.Timestamp,
+                    Entity = ae.Entity,
+                    EntityIdentifier = ae.EntityIdentifier,
+                    Status = ae.Status,
+                    UserVersion = ae.UserVersion,
+                })
+                .ToListAsync();
+            return new PaginatedResponse<SimpleAuditResponse>(pageIndex, pageSize, count, audits);
+        }
+
         public async Task<List<string>> GetActions()
         {
-            var actions = await context.ActivityEvents
-                .Select(ae => ae.Action)
+            var actions = await context
+                .ActivityEvents.Select(ae => ae.Action)
                 .Distinct()
                 .ToListAsync();
             return actions;
         }
 
+        public async Task<List<string>> GetUsers()
+        {
+            var users = await context.ActivityEvents.Select(ae => ae.User).Distinct().ToListAsync();
+            return users;
+        }
+
+        public async Task<List<string>> GetEntities()
+        {
+            var entities = await context
+                .ActivityEvents.Select(ae => ae.Entity)
+                .Distinct()
+                .ToListAsync();
+            return entities;
+        }
+
+        public async Task<List<string?>> GetStatuses()
+        {
+            var statuses = await context
+                .ActivityEvents.Select(ae => ae.Status)
+                .Distinct()
+                .ToListAsync();
+            return statuses;
+        }
+
+        public async Task<List<string?>> GetUserVersions()
+        {
+            var userVersions = await context
+                .ActivityEvents.Select(ae => ae.UserVersion)
+                .Distinct()
+                .ToListAsync();
+            return userVersions;
+        }
     }
 }

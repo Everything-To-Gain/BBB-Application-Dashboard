@@ -73,7 +73,8 @@ public static class WebApplicationExtension
     public static IServiceCollection AddDatabase(this IServiceCollection services)
     {
         // PostgreSQL Configuration
-        services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
+        services.AddDbContext<ApplicationDbContext>(
+            (serviceProvider, options) =>
             {
                 var secretService = serviceProvider.GetRequiredService<ISecretService>();
                 var connectionString = secretService.GetSecret(
@@ -185,10 +186,10 @@ public static class WebApplicationExtension
         services.AddScoped<IEmailService, EmailService>();
 
         //? Business Services
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IApplicationService, ApplicationService>();
         services.AddScoped<IAuditService, AuditService>();
         services.AddScoped<ITobService, TobService>();
-        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IAuthService, AuthService>();
 
@@ -208,11 +209,7 @@ public static class WebApplicationExtension
         {
             options.AddPolicy(
                 "Angular Cors",
-                policy =>
-                    policy
-                        .AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
+                policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
             );
         });
         return services;

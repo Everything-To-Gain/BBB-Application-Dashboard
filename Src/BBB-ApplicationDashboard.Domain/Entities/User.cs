@@ -13,4 +13,7 @@ public class User
     [Required(ErrorMessage = "A user cannot exist without email address!")]
     public required string Email { get; set; }
     public required Source UserSource { get; set; }
+    public bool IsActive { get; set; } = true;
+    public bool IsAdmin { get; set; } = false;
+    public bool IsCSVSync { get; set; } = false;
 }

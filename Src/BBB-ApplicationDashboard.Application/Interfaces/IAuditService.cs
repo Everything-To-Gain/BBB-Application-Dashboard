@@ -1,4 +1,6 @@
-﻿using BBB_ApplicationDashboard.Domain.Entities;
+﻿using BBB_ApplicationDashboard.Application.DTOs.Audit;
+using BBB_ApplicationDashboard.Application.DTOs.PaginatedDtos;
+using BBB_ApplicationDashboard.Domain.Entities;
 
 namespace BBB_ApplicationDashboard.Application.Interfaces
 {
@@ -6,10 +8,15 @@ namespace BBB_ApplicationDashboard.Application.Interfaces
     {
         Task DeleteActivityEvent(Guid id);
         Task DeleteAllActivityEvents();
-        Task<List<string>> GetActions();
         Task<ActivityEvent?> GetActivityEventById(Guid id);
-        Task<List<ActivityEvent>> GetActivityEvents(int page = 1, int pageSize = 10);
-        Task<int> GetTotalActivityEventCount();
         Task LogActivityEvent(ActivityEvent activityEvent);
+        Task<PaginatedResponse<SimpleAuditResponse>> GetAllFilteredActivityEvents(
+            AuditPaginationRequest request
+        );
+        Task<List<string>> GetActions();
+        Task<List<string>> GetUsers();
+        Task<List<string>> GetEntities();
+        Task<List<string?>> GetStatuses();
+        Task<List<string?>> GetUserVersions();
     }
 }

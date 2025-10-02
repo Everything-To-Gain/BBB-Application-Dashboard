@@ -1,23 +1,60 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BBB_ApplicationDashboard.Application.DTOs.PaginatedDtos;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BBB_ApplicationDashboard.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class AuditController(IAuditService auditService) : CustomControllerBase
     {
-        [HttpGet("GetAllAudits")]
-        public async Task<IActionResult> GetAllAudits([FromQuery] int page= 1, [FromQuery] int pageSize=10)
-        {
-            var audits = await auditService.GetActivityEvents(page,pageSize);
-            return SucessResponseWithData(audits);
-        }
         [HttpPost("log")]
         public async Task<IActionResult> LogAudit(ActivityEvent activityEvent)
         {
             await auditService.LogActivityEvent(activityEvent);
-            return SucessResponse("Audit logged successfully");
+            return SuccessResponse("Audit logged successfully");
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAudit(Guid id)
+        {
+            var audit = await auditService.GetActivityEventById(id);
+            return SuccessResponseWithData(audit);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllFilteredAudits(
+            [FromQuery] AuditPaginationRequest request
+        )
+        {
+            var audits = await auditService.GetAllFilteredActivityEvents(request);
+            return SuccessResponseWithData(audits);
+        }
+
+        [HttpGet("users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = await auditService.GetUsers();
+            return SuccessResponseWithData(users);
+        }
+
+        [HttpGet("statuses")]
+        public async Task<IActionResult> GetStatuses()
+        {
+            var statuses = await auditService.GetStatuses();
+            return SuccessResponseWithData(statuses);
+        }
+
+        [HttpGet("user-versions")]
+        public async Task<IActionResult> GetUserVersions()
+        {
+            var versions = await auditService.GetUserVersions();
+            return SuccessResponseWithData(versions);
+        }
+
+        [HttpGet("entities")]
+        public async Task<IActionResult> GetEntities()
+        {
+            var entities = await auditService.GetEntities();
+            return SuccessResponseWithData(entities);
         }
     }
 }

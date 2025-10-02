@@ -38,5 +38,4 @@ namespace BBB_ApplicationDashboard.Domain.Entities
         [Column(TypeName = "jsonb")]
         public JsonDocument Metadata { get; set; } = JsonDocument.Parse("{}");
     }
-
 }
