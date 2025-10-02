@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using BBB_ApplicationDashboard.Application;
+using BBB_ApplicationDashboard.Infrastructure;
 using BBB_ApplicationDashboard.Infrastructure.Services.Audit;
 using BBB_ApplicationDashboard.Infrastructure.Services.Clients;
 
@@ -191,6 +193,8 @@ public static class WebApplicationExtension
         services.AddScoped<IAuditService, AuditService>();
         services.AddScoped<ITobService, TobService>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IDumpService, DumpService>();
+        services.AddSingleton<IMongoDumpRepository, MongoDumpRepository>();
         services.AddScoped<IAuthService, AuthService>();
 
         //? Client Services
