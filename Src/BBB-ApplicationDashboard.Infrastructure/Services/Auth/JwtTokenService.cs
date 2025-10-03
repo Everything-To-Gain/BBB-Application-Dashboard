@@ -39,6 +39,12 @@ public class JwtTokenService(ISecretService secretService) : IJwtTokenService
         if (specialEmails.Contains(user.Email))
             claims.Add(new Claim("specialAccess", "true"));
 
+        if (user.IsAdmin)
+        {
+            Console.WriteLine("user is admin? " + user.IsAdmin);
+            claims.Add(new Claim("isAdmin", "true"));
+        }
+
         //!3) Token descriptor
         SecurityTokenDescriptor tokenDescriptor = new()
         {

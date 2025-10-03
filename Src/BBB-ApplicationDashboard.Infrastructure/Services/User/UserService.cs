@@ -298,4 +298,13 @@ public class UserService(ApplicationDbContext context) : IUserService
 
         await context.SaveChangesAsync();
     }
+
+    public async Task<List<string>> GetAdminDashboardCSVUsers()
+    {
+        return await context
+            .Users.AsNoTracking()
+            .Where(u => u.IsAdmin == false && u.IsCSVSync == true)
+            .Select(u => u.Email)
+            .ToListAsync();
+    }
 }

@@ -5,9 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BBB_ApplicationDashboard.Api.Controllers;
 
-[Authorize(Policy = "Internal")]
+// [Authorize(Policy = "Internal")]
 public class UserController(IUserService userService) : CustomControllerBase
 {
+    [HttpGet("admin-dashboard/csv-users")]
+    public async Task<IActionResult> GetCSVUsers()
+    {
+        var csvUsers = await userService.GetAdminDashboardCSVUsers();
+        return SuccessResponseWithData(csvUsers);
+    }
+
     [HttpGet("admin-dashboard")]
     public async Task<IActionResult> GetAdminDashboardUsers(
         [FromQuery] UserPaginationRequest request

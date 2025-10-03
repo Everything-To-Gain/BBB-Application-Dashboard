@@ -16,4 +16,5 @@ public interface IUserService
     Task CreateAdminDashboardUser(AdminDashboardCreateUserRequest request);
     Task CreateAdminDashboardUsers(string usersCsv);
     Task UpdateAdminDashboardUser(Guid id, AdminDashboardUpdateUserRequest request);
+    Task<List<string>> GetAdminDashboardCSVUsers();
 }

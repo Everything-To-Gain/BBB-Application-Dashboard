@@ -22,6 +22,6 @@ public class TobService(IMongoDatabase database) : ITobService
             pipeline = pipeline.Match(new BsonDocument("properties.tob", regex));
         }
 
-        return await pipeline.Project<TOB>(projection).Limit(5).ToListAsync();
+        return await pipeline.Project<TOB>(projection).Limit(10).ToListAsync();
     }
 }
