@@ -170,6 +170,61 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
         );
     }
 
+    public async Task<PaginatedResponse<ExternalApplicationResponse>> GetExternalDataForAdmins(
+        AdminExternalPaginationRequest request
+    )
+    {
+        //! 1) Filter by source
+        var query = context.Accreditations.AsNoTracking();
+
+        if (request.PartnershipSource is null)
+            query = query.Where(a => a.PartnershipSource != Source.Internal);
+        else
+            query = query.Where(a =>
+                a.PartnershipSource != Source.Internal
+                && a.PartnershipSource == request.PartnershipSource
+            );
+
+        //! 2) Smart search for filter by submitted by email
+        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        {
+            var searchTerm = request.SearchTerm.Trim();
+            query = query.Where(a => EF.Functions.ILike(a.SubmittedByEmail, $"%{searchTerm}%"));
+        }
+
+        if (request.ExternalStatus is not null)
+            query = query.Where(a => a.ApplicationStatusExternal == request.ExternalStatus);
+
+        //! 3) Get total count of result
+        int total = await query.CountAsync();
+
+        //! 4) Apply pagination
+        int pageIndex = request.PageNumber - 1;
+        int pageSize = Math.Max(1, Math.Min(100, request.PageSize));
+
+        //! 5) Execute query
+        IEnumerable<ExternalApplicationResponse> applications = await query
+            .OrderBy(a => a.SubmittedByEmail)
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize)
+            .Select(a => new ExternalApplicationResponse
+            {
+                ApplicationId = a.ApplicationId,
+                CompanyName = a.BusinessName,
+                SubmittedByEmail = a.SubmittedByEmail,
+                ApplicationStatusExternal = a.ApplicationStatusExternal.ToString(),
+            })
+            .ToListAsync();
+
+        //! 6) Return result
+        return new PaginatedResponse<ExternalApplicationResponse>(
+            pageIndex,
+            pageSize,
+            total,
+            applications
+        );
+    }
+
     public async Task<Accreditation> GetApplicationById(Guid id)
     {
         var accreditation =
