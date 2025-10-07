@@ -12,30 +12,26 @@ namespace BBB_ApplicationDashboard.Domain.Entities
     [Table("activity_events")]
     public class ActivityEvent
     {
-        [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        [Key] public Guid Id { get; set; } = Guid.NewGuid();
 
-        [Required, MaxLength(200)]
-        public string User { get; set; } = default!;
+        [Required, MaxLength(200)] public string User { get; set; } = default!;
 
-        [Required, MaxLength(100)]
-        public string Action { get; set; } = default!;
+        [Required, MaxLength(100)] public string Action { get; set; } = default!;
 
         public DateTimeOffset Timestamp { get; set; }
 
-        [Required, MaxLength(100)]
-        public string Entity { get; set; } = default!;
+        [Required, MaxLength(100)] public string Entity { get; set; } = default!;
 
-        [MaxLength(200)]
-        public string? EntityIdentifier { get; set; }
+        [MaxLength(200)] public string? EntityIdentifier { get; set; }
 
-        [MaxLength(50)]
-        public string? Status { get; set; }
+        [MaxLength(50)] public string? Status { get; set; }
 
-        [MaxLength(50)]
-        public string? UserVersion { get; set; }
+        [MaxLength(50)] public string? UserVersion { get; set; }
 
-        [Column(TypeName = "jsonb")]
-        public JsonDocument Metadata { get; set; } = JsonDocument.Parse("{}");
+        [Column(TypeName = "jsonb")] public JsonDocument Metadata { get; set; } = JsonDocument.Parse("{}");
+
+        public string SyncSource { get; set; } = "OnlineSync";
+
+        public string Env { get; set; } = "Production";
     }
 }
