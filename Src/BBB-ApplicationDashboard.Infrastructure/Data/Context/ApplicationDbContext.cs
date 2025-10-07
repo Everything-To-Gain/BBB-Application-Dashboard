@@ -1,4 +1,5 @@
 using System.Text.Json;
+using BBB_ApplicationDashboard.Domain;
 using BBB_ApplicationDashboard.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ActivityEvent> ActivityEvents => Set<ActivityEvent>();
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Session> Sessions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

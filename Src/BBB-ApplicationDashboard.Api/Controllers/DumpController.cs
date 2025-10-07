@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BBB_ApplicationDashboard.Api;
 
-// [Authorize]
+[Authorize(AuthenticationSchemes = "ApiKey")]
 public class DumpController(IDumpService dumpService) : CustomControllerBase
 {
     [HttpPost("partnership-form")]

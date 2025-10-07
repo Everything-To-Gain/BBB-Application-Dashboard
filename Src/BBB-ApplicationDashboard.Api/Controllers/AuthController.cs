@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using BBB_ApplicationDashboard.Domain;
 using BBB_ApplicationDashboard.Infrastructure.Exceptions.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +9,8 @@ namespace BBB_ApplicationDashboard.Api.Controllers
     public class AuthController(
         IAuthService authService,
         IUserService userService,
-        IJwtTokenService jwtTokenService
+        IJwtTokenService jwtTokenService,
+        ApplicationDbContext context
     ) : CustomControllerBase
     {
         [HttpGet("google-login-scalar")]
@@ -145,6 +148,41 @@ namespace BBB_ApplicationDashboard.Api.Controllers
         public IActionResult ValidateToken()
         {
             return Ok();
+        }
+
+        [HttpPost("generate-api-key")]
+        [Authorize]
+        public async Task<IActionResult> GenerateApiKey([FromBody] GenerateApiKeyRequest request)
+        {
+            var apiKey = Guid.NewGuid().ToString("N"); // Generate a random API key
+
+            var session = new Session
+            {
+                Token = apiKey,
+                ExpiresAt = DateTime.UtcNow.AddYears(70),
+                Description = request.Description,
+            };
+
+            context.Sessions.Add(session);
+            await context.SaveChangesAsync();
+
+            return SuccessResponseWithData(new { ApiKey = apiKey, session.ExpiresAt });
+        }
+
+        [HttpPost("revoke-api-key")]
+        [Authorize]
+        public async Task<IActionResult> RevokeApiKey([FromBody] RevokeApiKeyRequest request)
+        {
+            var session = await context.Sessions.FirstOrDefaultAsync(s =>
+                s.Token == request.ApiKey
+            );
+            if (session == null)
+                return NotFound("API key not found");
+
+            session.IsActive = false;
+            await context.SaveChangesAsync();
+
+            return SuccessResponse("API key revoked successfully");
         }
     }
 }

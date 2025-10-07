@@ -3,6 +3,7 @@ using BBB_ApplicationDashboard.Application;
 using BBB_ApplicationDashboard.Infrastructure;
 using BBB_ApplicationDashboard.Infrastructure.Services.Audit;
 using BBB_ApplicationDashboard.Infrastructure.Services.Clients;
+using Microsoft.AspNetCore.Authentication;
 
 namespace BBB_ApplicationDashboard.Api.Extensions;
 
@@ -23,7 +24,7 @@ public static class WebApplicationExtension
 
             var settings = new ClientSettings
             {
-                Auth = new AuthenticationOptions
+                Auth = new Infisical.Sdk.AuthenticationOptions
                 {
                     UniversalAuth = new UniversalAuthMethod
                     {
@@ -157,6 +158,10 @@ public static class WebApplicationExtension
                         return Task.CompletedTask;
                     };
                 }
+            )
+            .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(
+                "ApiKey",
+                options => { }
             );
 
         services.AddAuthorization(options =>
