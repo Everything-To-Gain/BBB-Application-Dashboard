@@ -90,6 +90,17 @@ public class ApplicationController(
         return SuccessResponseWithData(applications);
     }
 
+    [Authorize(Policy = "Internal")]
+    [HttpGet("external-data/admins")]
+    public async Task<IActionResult> GetExternalDataForAdmins(
+        [FromQuery] AdminExternalPaginationRequest request
+    )
+    {
+        var applications = await applicationService.GetExternalDataForAdmins(request);
+
+        return SuccessResponseWithData(applications);
+    }
+
     [Authorize]
     [HttpGet("application-external-status")]
     public IActionResult GetApplicationExternalStatus()
