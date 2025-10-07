@@ -63,6 +63,13 @@ namespace BBB_ApplicationDashboard.Infrastructure.Services.Audit
             if (request.ToDate.HasValue)
                 query = query.Where(ae => ae.Timestamp <= request.ToDate.Value);
 
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            {
+                var searchTerm = request.SearchTerm.Trim();
+
+                query = query.Where(a => (a.EntityIdentifier ?? string.Empty).Contains(searchTerm));
+            }
+
             var count = await query.CountAsync();
             int pageIndex = request.PageNumber - 1;
             int pageSize = Math.Max(1, Math.Min(100, request.PageSize));
