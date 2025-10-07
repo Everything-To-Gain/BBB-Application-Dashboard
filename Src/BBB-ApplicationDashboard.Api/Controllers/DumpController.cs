@@ -13,7 +13,12 @@ public class DumpController(IDumpService dumpService) : CustomControllerBase
         [FromBody] Dictionary<string, object> payload
     )
     {
-        await dumpService.DumpIntoMongo(payload);
+        var key =
+            HttpContext.Request.Headers["X-API-KEY"].ToString() ?? throw new UnauthorizedException(
+                "❌ X-API-KEY didn't exist and this is impossible, Authentication handler sucks and doesnt work"
+            );
+
+        await dumpService.DumpIntoMongo(payload, key);
         return SuccessResponse("✅ Dumped data successfully!");
     }
 

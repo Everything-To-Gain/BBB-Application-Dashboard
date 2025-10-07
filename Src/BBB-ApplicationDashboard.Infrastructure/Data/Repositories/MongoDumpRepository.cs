@@ -34,6 +34,10 @@ public class MongoDumpRepository : IMongoDumpRepository
             throw new ArgumentNullException(nameof(payload));
         }
 
+        // Add createdAt and filled fields to the payload
+        payload["createdAt"] = DateTime.UtcNow;
+        payload["processed"] = false;
+
         // Convert via JSON so System.Text.Json.JsonElement and nested structures are handled
         var json = JsonSerializer.Serialize(payload);
         var bsonDocument = BsonDocument.Parse(json);

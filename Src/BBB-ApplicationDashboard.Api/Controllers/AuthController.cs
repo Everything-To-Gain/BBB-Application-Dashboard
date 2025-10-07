@@ -161,6 +161,7 @@ namespace BBB_ApplicationDashboard.Api.Controllers
                 Token = apiKey,
                 ExpiresAt = DateTime.UtcNow.AddYears(70),
                 Description = request.Description,
+                SessionSource = request.Source,
             };
 
             context.Sessions.Add(session);
