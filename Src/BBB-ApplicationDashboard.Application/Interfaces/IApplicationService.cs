@@ -17,6 +17,9 @@ public interface IApplicationService
         ExternalPaginationRequest request,
         Source source
     );
+    Task<PaginatedResponse<ExternalApplicationResponse>> GetExternalDataForAdmins(
+        AdminExternalPaginationRequest request
+    );
     Task<bool> UpdateApplicationStatus(
         UpdateApplicationStatusRequest updateApplicationStatusRequest
     );

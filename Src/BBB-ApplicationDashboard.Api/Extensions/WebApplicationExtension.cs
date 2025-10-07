@@ -166,8 +166,9 @@ public static class WebApplicationExtension
 
         services.AddAuthorization(options =>
         {
-            // Policy for Admin only
+            // Policy for Internal only
             options.AddPolicy("Internal", policy => policy.RequireRole(Source.Internal.ToString()));
+            options.AddPolicy("Admin", policy => policy.RequireClaim("isAdmin", "true"));
         });
         return services;
     }
