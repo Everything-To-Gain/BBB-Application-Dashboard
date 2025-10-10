@@ -13,7 +13,7 @@ public class CustomControllerBase : ControllerBase
     )
     {
         return Ok(
-            new APIResponse<T>
+            new ApiResponse<T>
             {
                 Success = true,
                 Message = message,
@@ -28,7 +28,7 @@ public class CustomControllerBase : ControllerBase
     )
     {
         return Ok(
-            new APIResponse<T>
+            new ApiResponse<T>
             {
                 Success = false,
                 Message = message,
@@ -40,7 +40,7 @@ public class CustomControllerBase : ControllerBase
     protected IActionResult SuccessResponse(string? message = "The operation done successfully")
     {
         return Ok(
-            new APIResponse<object>
+            new ApiResponse<object>
             {
                 Success = true,
                 Message = message,
@@ -54,7 +54,7 @@ public class CustomControllerBase : ControllerBase
     )
     {
         return Ok(
-            new APIResponse<object>
+            new ApiResponse<object>
             {
                 Success = false,
                 Message = message,

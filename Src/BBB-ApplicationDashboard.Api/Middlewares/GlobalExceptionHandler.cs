@@ -55,7 +55,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             );
         }
 
-        (string Detail, string Title, int statusCode) = exception switch
+        (string detail, string title, int statusCode) = exception switch
         {
             InternalServerException => (
                 exception.Message,
@@ -91,8 +91,8 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
 
         var problemDetails = new ProblemDetails
         {
-            Title = Title,
-            Detail = Detail,
+            Title = title,
+            Detail = detail,
             Status = statusCode,
             Instance = requestPath,
         };
@@ -107,6 +107,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
                 errors.Add(new { property = e.PropertyName, message = e.ErrorMessage });
             }
         }
+
         //! Always include errors key (empty array when not validation)
         problemDetails.Extensions["errors"] = errors;
 

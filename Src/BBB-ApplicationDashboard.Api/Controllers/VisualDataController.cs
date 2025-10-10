@@ -8,6 +8,6 @@ public class VisualDataController(ITobService tobService) : CustomControllerBase
     [HttpGet("type-of-business")]
     public async Task<IActionResult> GetTobs(string? searchTerm)
     {
-        return SuccessResponseWithData(await tobService.GetTOBs(searchTerm));
+        return SuccessResponseWithData(await tobService.GetToBs(searchTerm));
     }
 }

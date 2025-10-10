@@ -1,22 +1,21 @@
-using System.Text.Json;
-using BBB_ApplicationDashboard.Application.Interfaces;
+﻿using BBB_ApplicationDashboard.Application.Interfaces;
 using BBB_ApplicationDashboard.Domain.ValueObjects;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace BBB_ApplicationDashboard.Infrastructure.Data.Repositories;
 
-public class MongoDumpRepository : IMongoDumpRepository
+public class MongoN8NAuditLogsRepository : IMongoN8NAuditLogsRepository
 {
     private readonly IMongoCollection<BsonDocument> _collection;
 
-    public MongoDumpRepository(ISecretService secretService)
+    public MongoN8NAuditLogsRepository(ISecretService secretService)
     {
         var client = new MongoClient(
             secretService.GetSecret(ProjectSecrets.DumpMongoDBConnection, Folders.ConnectionStrings)
         );
-        var db = client.GetDatabase("default");
-        _collection = db.GetCollection<BsonDocument>("dump");
+        var db = client.GetDatabase("Webhooks");
+        _collection = db.GetCollection<BsonDocument>("audit");
     }
 
     public async Task InsertAsync(Dictionary<string, object> payload)
@@ -28,19 +27,15 @@ public class MongoDumpRepository : IMongoDumpRepository
 
         // Add createdAt and filled fields to the payload
         payload["createdAt"] = DateTime.UtcNow;
-        payload["processed"] = false;
-
         // Convert via JSON so System.Text.Json.JsonElement and nested structures are handled
-        var json = JsonSerializer.Serialize(payload);
+        var json = System.Text.Json.JsonSerializer.Serialize(payload);
         var bsonDocument = BsonDocument.Parse(json);
-
         await _collection.InsertOneAsync(bsonDocument);
     }
 
     public async Task<List<Dictionary<string, object>>> GetAllAsync()
     {
         var documents = await _collection.Find(FilterDefinition<BsonDocument>.Empty).ToListAsync();
-
         var results = new List<Dictionary<string, object>>(documents.Count);
         foreach (var doc in documents)
         {

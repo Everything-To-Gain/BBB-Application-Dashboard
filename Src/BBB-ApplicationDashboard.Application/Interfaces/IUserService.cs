@@ -9,12 +9,14 @@ public interface IUserService
 {
     Task<User?> FindUser(string email);
     Task CreateUser(User user);
+
     Task<PaginatedResponse<AdminDashboardUserResponse>> GetAdminDashboardUsers(
         UserPaginationRequest request
     );
+
     Task DeleteUser(Guid id);
     Task CreateAdminDashboardUser(AdminDashboardCreateUserRequest request);
     Task CreateAdminDashboardUsers(string usersCsv);
     Task UpdateAdminDashboardUser(Guid id, AdminDashboardUpdateUserRequest request);
-    Task<List<string>> GetAdminDashboardCSVUsers();
+    Task<List<string>> GetAdminDashboardCsvUsers();
 }

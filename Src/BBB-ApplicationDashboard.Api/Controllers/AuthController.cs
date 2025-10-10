@@ -14,10 +14,10 @@ namespace BBB_ApplicationDashboard.Api.Controllers
     ) : CustomControllerBase
     {
         [HttpGet("google-login-scalar")]
-        public IActionResult GoogleLoginScalar() => Ok(authService.GetGoogleLoginURI().ToString());
+        public IActionResult GoogleLoginScalar() => Ok(authService.GetGoogleLoginUri().ToString());
 
         [HttpGet("google-login")]
-        public IActionResult GoogleLogin() => Redirect(authService.GetGoogleLoginURI().ToString());
+        public IActionResult GoogleLogin() => Redirect(authService.GetGoogleLoginUri().ToString());
 
         [HttpGet("google-callback")]
         public async Task<IActionResult> GoogleCallbackServer(
@@ -76,12 +76,12 @@ namespace BBB_ApplicationDashboard.Api.Controllers
         [HttpGet("microsoft-login-scalar")]
         public IActionResult MicrosoftLoginScalar()
         {
-            return Ok(authService.GetMicrosoftLoginURI().ToString());
+            return Ok(authService.GetMicrosoftLoginUri().ToString());
         }
 
         [HttpGet("microsoft-login")]
         public IActionResult MicrosoftLogin() =>
-            Redirect(authService.GetMicrosoftLoginURI().ToString());
+            Redirect(authService.GetMicrosoftLoginUri().ToString());
 
         [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet("microsoft-callback")]

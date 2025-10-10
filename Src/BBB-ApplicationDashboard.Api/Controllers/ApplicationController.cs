@@ -66,7 +66,7 @@ public class ApplicationController(
 
     [Authorize(Policy = "Internal")]
     [HttpPost("{applicationId}/send-form-data")]
-    public async Task<IActionResult> SendCSVFormData(Guid applicationId)
+    public async Task<IActionResult> SendCsvFormData(Guid applicationId)
     {
         var applicationDetails = await applicationService.GetApplicationById(applicationId);
         var request = applicationDetails.Adapt<SubmittedDataRequest>();

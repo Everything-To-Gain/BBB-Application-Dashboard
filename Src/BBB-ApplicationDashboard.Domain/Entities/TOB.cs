@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace BBB_ApplicationDashboard.Domain.Entities;
 
 [BsonIgnoreExtraElements]
-public class TOB
+public class Tob
 {
     public string CbbbId { get; set; } = null!;
 

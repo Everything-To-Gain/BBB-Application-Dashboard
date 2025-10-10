@@ -1,10 +1,11 @@
 ﻿using BBB_ApplicationDashboard.Application.DTOs.PaginatedDtos;
+using BBB_ApplicationDashboard.Infrastructure.Services.N8n;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BBB_ApplicationDashboard.Api.Controllers
 {
-    public class AuditController(IAuditService auditService) : CustomControllerBase
+    public class AuditController(IAuditService auditService, IN8NAuditService n8n) : CustomControllerBase
     {
         [HttpPost("log")]
         public async Task<IActionResult> LogAudit(ActivityEvent activityEvent)
@@ -55,6 +56,13 @@ namespace BBB_ApplicationDashboard.Api.Controllers
         {
             var entities = await auditService.GetEntities();
             return SuccessResponseWithData(entities);
+        }
+
+        [HttpPost("n8n/log")]
+        public async Task<IActionResult> LogN8NAudit([FromBody] Dictionary<string, object> payload)
+        {
+            await n8n.Add(payload);
+            return SuccessResponse("N8N Audit logged successfully");
         }
     }
 }

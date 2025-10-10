@@ -2,10 +2,10 @@ namespace BBB_ApplicationDashboard.Infrastructure.Configuration;
 
 public record EmailOptions
 {
-    public string SMTP_HOST { get; set; } = null!;
-    public int SMTP_PORT { get; set; }
-    public string SMTP_USERNAME { get; set; } = null!;
-    public string SMTP_PASSWORD { get; set; } = null!;
-    public string FROM_EMAIL { get; set; } = null!;
-    public string FROM_NAME { get; set; } = null!;
+    public string SmtpHost { get; set; } = null!;
+    public int SmtpPort { get; set; }
+    public string SmtpUsername { get; set; } = null!;
+    public string SmtpPassword { get; set; } = null!;
+    public string FromEmail { get; set; } = null!;
+    public string FromName { get; set; } = null!;
 }

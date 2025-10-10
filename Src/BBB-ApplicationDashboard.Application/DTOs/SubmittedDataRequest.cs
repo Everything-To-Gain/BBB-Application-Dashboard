@@ -8,10 +8,12 @@ public class SubmittedDataRequest
 {
     [Required(ErrorMessage = "Business name is required")]
     public required string BusinessName { get; set; }
+
     public string? DoingBusinessAs { get; set; }
 
     [Required(ErrorMessage = "Business address is required")]
     public required string BusinessAddress { get; set; }
+
     public string? BusinessAptSuite { get; set; }
 
     [Required(ErrorMessage = "Business state is required")]
@@ -44,6 +46,7 @@ public class SubmittedDataRequest
     [Required(ErrorMessage = "Business email is required!")]
     [EmailAddress]
     public required string PrimaryBusinessEmail { get; set; }
+
     public string? EmailToReceiveQuoteRequestsFromCustomers { get; set; }
     public string? Website { get; set; }
 
@@ -67,6 +70,7 @@ public class SubmittedDataRequest
     [Required(ErrorMessage = "Primary contact email is required!")]
     [Phone]
     public required string PrimaryContactNumber { get; set; }
+
     public string? PreferredContactMethod { get; set; }
     public List<string> PrimaryContactTypes { get; set; } = [];
     public string? SecondaryFirstName { get; set; }
@@ -83,7 +87,8 @@ public class SubmittedDataRequest
 
     [Required(ErrorMessage = "Business service area is required!")]
     public required string BusinessServiceArea { get; set; }
-    public string? EIN { get; set; }
+
+    public string? Ein { get; set; }
 
     [Required(ErrorMessage = "Business type is required!")]
     public required string? BusinessType { get; set; }

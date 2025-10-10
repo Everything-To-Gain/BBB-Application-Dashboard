@@ -18,51 +18,52 @@ public class AuthService(ISecretService secretService, ILogger<AuthService> logg
     // private readonly string googleRedirectUri =
     //     $"{secretService.GetSecret(ProjectSecrets.PartnersRedirectBaseUrl, Folders.Auth)}/api/auth/google-callback";
 
-    private readonly string googleRedirectUri = "https://localhost:7100/api/auth/google-callback";
+    private readonly string _googleRedirectUri = "https://localhost:7100/api/auth/google-callback";
 
-    private readonly string googleClientId = secretService.GetSecret(
+    private readonly string _googleClientId = secretService.GetSecret(
         ProjectSecrets.PartnersGoogleClientId,
         Folders.Auth
     );
 
-    private readonly string googleClientSecret = secretService.GetSecret(
+    private readonly string _googleClientSecret = secretService.GetSecret(
         ProjectSecrets.PartnersGoogleClientSecret,
         Folders.Auth
     );
-    private readonly string microsoftRedirectUri =
+
+    private readonly string _microsoftRedirectUri =
         $"{secretService.GetSecret(ProjectSecrets.PartnersRedirectBaseUrl, Folders.Auth)}/api/Auth/microsoft-callback";
 
-    private readonly string microsoftClientId = secretService.GetSecret(
+    private readonly string _microsoftClientId = secretService.GetSecret(
         ProjectSecrets.MicrosoftClientId,
         Folders.Auth
     );
 
-    private readonly string microsoftClientSecret = secretService.GetSecret(
+    private readonly string _microsoftClientSecret = secretService.GetSecret(
         ProjectSecrets.MicrosoftClientSecret,
         Folders.Auth
     );
 
-    private readonly string microsoftTenantId = secretService.GetSecret(
+    private readonly string _microsoftTenantId = secretService.GetSecret(
         ProjectSecrets.MicrosoftTenantId,
         Folders.Auth
     );
 
-    public Uri GetGoogleLoginURI()
+    public Uri GetGoogleLoginUri()
     {
         return new(
-            $"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id={googleClientId}&redirect_uri={googleRedirectUri}&scope=openid email profile&state={Guid.NewGuid()}"
+            $"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id={_googleClientId}&redirect_uri={_googleRedirectUri}&scope=openid email profile&state={Guid.NewGuid()}"
         );
     }
 
-    public Uri GetMicrosoftLoginURI() =>
+    public Uri GetMicrosoftLoginUri() =>
         new Uri(
-            $"https://login.microsoftonline.com/{microsoftTenantId}/oauth2/v2.0/authorize"
-                + $"?client_id={Uri.EscapeDataString(microsoftClientId)}"
-                + $"&response_type=code"
-                + $"&redirect_uri={Uri.EscapeDataString(microsoftRedirectUri)}"
-                + $"&response_mode=query"
-                + $"&scope={Uri.EscapeDataString("openid profile email offline_access User.Read")}"
-                + $"&state={Uri.EscapeDataString(Guid.NewGuid().ToString("N"))}"
+            $"https://login.microsoftonline.com/{_microsoftTenantId}/oauth2/v2.0/authorize"
+            + $"?client_id={Uri.EscapeDataString(_microsoftClientId)}"
+            + $"&response_type=code"
+            + $"&redirect_uri={Uri.EscapeDataString(_microsoftRedirectUri)}"
+            + $"&response_mode=query"
+            + $"&scope={Uri.EscapeDataString("openid profile email offline_access User.Read")}"
+            + $"&state={Uri.EscapeDataString(Guid.NewGuid().ToString("N"))}"
         );
 
     public async Task<TokenResponse> ExchangeCodeForTokenAsync(string code, string? redirectUrl)
@@ -72,8 +73,8 @@ public class AuthService(ISecretService secretService, ILogger<AuthService> logg
             {
                 ClientSecrets = new ClientSecrets
                 {
-                    ClientId = googleClientId,
-                    ClientSecret = googleClientSecret,
+                    ClientId = _googleClientId,
+                    ClientSecret = _googleClientSecret,
                 },
 
                 Scopes = ["openid", "profile", "email"],
@@ -86,7 +87,7 @@ public class AuthService(ISecretService secretService, ILogger<AuthService> logg
             await flow.ExchangeCodeForTokenAsync(
                 userId: null,
                 code,
-                redirectUrl ?? googleRedirectUri,
+                redirectUrl ?? _googleRedirectUri,
                 CancellationToken.None
             )
             ?? throw new UserUnauthorizedException(
@@ -120,16 +121,16 @@ public class AuthService(ISecretService secretService, ILogger<AuthService> logg
     )
     {
         var tokenEndpoint =
-            $"https://login.microsoftonline.com/{microsoftTenantId}/oauth2/v2.0/token";
+            $"https://login.microsoftonline.com/{_microsoftTenantId}/oauth2/v2.0/token";
 
         var body = new Dictionary<string, string>
         {
-            ["client_id"] = microsoftClientId,
+            ["client_id"] = _microsoftClientId,
             ["scope"] = "openid profile email offline_access User.Read",
             ["code"] = code,
-            ["redirect_uri"] = redirectUrl ?? microsoftRedirectUri,
+            ["redirect_uri"] = redirectUrl ?? _microsoftRedirectUri,
             ["grant_type"] = "authorization_code",
-            ["client_secret"] = microsoftClientSecret,
+            ["client_secret"] = _microsoftClientSecret,
         };
 
         HttpResponseMessage tokenResponse;

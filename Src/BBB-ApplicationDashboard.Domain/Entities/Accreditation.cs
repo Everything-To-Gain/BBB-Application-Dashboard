@@ -5,13 +5,12 @@ namespace BBB_ApplicationDashboard.Domain.Entities;
 
 public class Accreditation
 {
-    [Key]
-    public Guid ApplicationId { get; set; }
+    [Key] public Guid ApplicationId { get; set; }
     public string ApplicationNumber { get; set; } = string.Empty;
-    public string? BlueApplicationID { get; set; }
-    public string? HubSpotApplicationID { get; set; }
-    public string? BID { get; set; }
-    public string? CompanyRecordID { get; set; }
+    public string? BlueApplicationId { get; set; }
+    public string? HubSpotApplicationId { get; set; }
+    public string? Bid { get; set; }
+    public string? CompanyRecordId { get; set; }
     public string TrackingLink { get; set; } = null!;
     public ApplicationStatusInternal ApplicationStatusInternal { get; set; }
     public ApplicationStatusExternal ApplicationStatusExternal { get; set; }
@@ -65,7 +64,7 @@ public class Accreditation
     public required string BusinessDescription { get; set; }
 
     public required string BusinessServiceArea { get; set; }
-    public string? EIN { get; set; }
+    public string? Ein { get; set; }
 
     [Required(ErrorMessage = "Business type is required!")]
     public required string? BusinessType { get; set; }
@@ -107,5 +106,6 @@ public class License
 
     [Required(ErrorMessage = "Licensing number is required!")]
     public required string LicensingNumber { get; set; }
+
     public DateOnly? Expiration { get; set; }
 }

@@ -7,13 +7,13 @@ namespace BBB_ApplicationDashboard.Application.Interfaces;
 
 public interface IAuthService
 {
-    Uri GetGoogleLoginURI();
+    Uri GetGoogleLoginUri();
 
     Task<TokenResponse> ExchangeCodeForTokenAsync(string code, string? redirectUrl);
 
     Task<GoogleJsonWebSignature.Payload?> GetPayload(TokenResponse tokenData);
 
-    Uri GetMicrosoftLoginURI();
+    Uri GetMicrosoftLoginUri();
 
     Task<MicrosoftTokenResponse> ExchangeMicrosoftCodeForTokenAsync(
         string code,

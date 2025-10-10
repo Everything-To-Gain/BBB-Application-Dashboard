@@ -1,8 +1,11 @@
 using System.Text.Json.Serialization;
 using BBB_ApplicationDashboard.Application;
 using BBB_ApplicationDashboard.Infrastructure;
+using BBB_ApplicationDashboard.Infrastructure.Data.Repositories;
 using BBB_ApplicationDashboard.Infrastructure.Services.Audit;
 using BBB_ApplicationDashboard.Infrastructure.Services.Clients;
+using BBB_ApplicationDashboard.Infrastructure.Services.Dump;
+using BBB_ApplicationDashboard.Infrastructure.Services.N8n;
 using Microsoft.AspNetCore.Authentication;
 
 namespace BBB_ApplicationDashboard.Api.Extensions;
@@ -76,8 +79,7 @@ public static class WebApplicationExtension
     public static IServiceCollection AddDatabase(this IServiceCollection services)
     {
         // PostgreSQL Configuration
-        services.AddDbContext<ApplicationDbContext>(
-            (serviceProvider, options) =>
+        services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
             {
                 var secretService = serviceProvider.GetRequiredService<ISecretService>();
                 var connectionString = secretService.GetSecret(
@@ -201,6 +203,8 @@ public static class WebApplicationExtension
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IDumpService, DumpService>();
         services.AddSingleton<IMongoDumpRepository, MongoDumpRepository>();
+        services.AddScoped<IMongoN8NAuditLogsRepository, MongoN8NAuditLogsRepository>();
+        services.AddScoped<IN8NAuditService, N8NAuditService>();
         services.AddScoped<IAuthService, AuthService>();
 
         //? Client Services

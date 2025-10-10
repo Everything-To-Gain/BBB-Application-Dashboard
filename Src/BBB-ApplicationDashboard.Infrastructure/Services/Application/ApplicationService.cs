@@ -37,7 +37,7 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
             $"https://bbb-partners.playdough.co/track-application/{applicationNumber}";
         accreditation.ApplicationStatusExternal = ApplicationStatusExternal.Submitted;
         accreditation.ApplicationStatusInternal =
-            ApplicationStatusInternal.Accreditation_Services_Review;
+            ApplicationStatusInternal.AccreditationServicesReview;
         accreditation.ApplicationNumber = applicationNumber;
 
         context.Accreditations.Add(accreditation);
@@ -50,20 +50,20 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
 
     public async Task UpdateApplicationAsync(ApplicationInfo applicationInfo)
     {
-        if (!Guid.TryParse(applicationInfo.ApplicationID, out var applicationId))
+        if (!Guid.TryParse(applicationInfo.ApplicationId, out var applicationId))
             throw new ArgumentException(
                 "Invalid ApplicationID format",
-                nameof(applicationInfo.ApplicationID)
+                nameof(applicationInfo.ApplicationId)
             );
 
         var accreditation =
             await context.Accreditations.FirstOrDefaultAsync(a => a.ApplicationId == applicationId)
             ?? throw new KeyNotFoundException("Accreditation not found");
 
-        accreditation.BlueApplicationID = applicationInfo.BlueAppID;
-        accreditation.HubSpotApplicationID = applicationInfo.HubSpotAppID;
-        accreditation.BID = applicationInfo.BID;
-        accreditation.CompanyRecordID = applicationInfo.CompanyRecordID;
+        accreditation.BlueApplicationId = applicationInfo.BlueAppId;
+        accreditation.HubSpotApplicationId = applicationInfo.HubSpotAppId;
+        accreditation.Bid = applicationInfo.Bid;
+        accreditation.CompanyRecordId = applicationInfo.CompanyRecordId;
 
         await context.SaveChangesAsync();
     }
@@ -103,10 +103,10 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
             .Select(a => new InternalApplicationResponse
             {
                 ApplicationId = a.ApplicationId,
-                BlueApplicationID = a.BlueApplicationID,
-                HubSpotApplicationID = a.HubSpotApplicationID,
-                BID = a.BID,
-                CompanyRecordID = a.CompanyRecordID,
+                BlueApplicationId = a.BlueApplicationId,
+                HubSpotApplicationId = a.HubSpotApplicationId,
+                Bid = a.Bid,
+                CompanyRecordId = a.CompanyRecordId,
                 SubmittedByEmail = a.SubmittedByEmail,
                 ApplicationStatusInternal = a.ApplicationStatusInternal.ToString(),
                 ApplicationStatusExternal = a.ApplicationStatusExternal.ToString(),
@@ -238,7 +238,7 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
     )
     {
         var accreditation = await context.Accreditations.FirstOrDefaultAsync(a =>
-            a.BlueApplicationID == updateApplicationStatusRequest.BlueApplicationID
+            a.BlueApplicationId == updateApplicationStatusRequest.BlueApplicationId
         );
         if (accreditation == null)
             return false;

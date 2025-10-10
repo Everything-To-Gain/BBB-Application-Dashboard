@@ -43,15 +43,15 @@ public class UserService(ApplicationDbContext context) : IUserService
         }
 
         //! 4) filter by isCSVSync
-        if (request.IsCSVSync.HasValue)
+        if (request.IsCsvSync.HasValue)
         {
-            query = query.Where(u => u.IsCSVSync == request.IsCSVSync.Value);
+            query = query.Where(u => u.IsCsvSync == request.IsCsvSync.Value);
         }
 
         //! 5) filter by isActive
         if (request.IsActive.HasValue)
         {
-            query = query.Where(u => u.IsCSVSync == request.IsActive.Value);
+            query = query.Where(u => u.IsCsvSync == request.IsActive.Value);
         }
 
         //! 6) get total count
@@ -72,7 +72,7 @@ public class UserService(ApplicationDbContext context) : IUserService
                 Email = a.Email,
                 IsActive = a.IsActive,
                 IsAdmin = a.IsAdmin,
-                IsCSVSync = a.IsCSVSync,
+                IsCsvSync = a.IsCsvSync,
             })
             .ToListAsync();
 
@@ -101,7 +101,7 @@ public class UserService(ApplicationDbContext context) : IUserService
             UserSource = Domain.ValueObjects.Source.Internal,
             Email = request.Email.Trim(),
             IsAdmin = request.IsAdmin,
-            IsCSVSync = request.IsCSVSync,
+            IsCsvSync = request.IsCsvSync,
         };
 
         //! 3) save into database
@@ -118,18 +118,18 @@ public class UserService(ApplicationDbContext context) : IUserService
         string? rawLine;
         int lineNumber = 0;
 
-        const int BatchSize = 1000;
-        const int MaxLines = 50_000;
+        const int batchSize = 1000;
+        const int maxLines = 50_000;
 
-        var currentBatch = new List<Domain.Entities.User>(capacity: BatchSize);
+        var currentBatch = new List<Domain.Entities.User>(capacity: batchSize);
         var failed = new List<string>(); // you could later replace this with a DTO if you want feedback
 
         while ((rawLine = await reader.ReadLineAsync()) != null)
         {
             lineNumber++;
-            if (lineNumber > MaxLines)
+            if (lineNumber > maxLines)
                 throw new UserBadRequestException(
-                    $"Input exceeds maximum allowed lines of {MaxLines}"
+                    $"Input exceeds maximum allowed lines of {maxLines}"
                 );
 
             var line = rawLine.Trim();
@@ -179,7 +179,7 @@ public class UserService(ApplicationDbContext context) : IUserService
             }
 
             var isAdmin = flags.Contains("admin");
-            var isCSVSync = flags.Contains("csvsync");
+            var isCsvSync = flags.Contains("csvsync");
 
             if (isAdmin)
             {
@@ -202,13 +202,13 @@ public class UserService(ApplicationDbContext context) : IUserService
                     UserSource = Domain.ValueObjects.Source.Internal,
                     Email = normalizedEmail,
                     IsAdmin = false, // bulk import can't set Admin
-                    IsCSVSync = isCSVSync,
+                    IsCsvSync = isCsvSync,
                     IsActive = true,
                 }
             );
 
             // Save in batches
-            if (currentBatch.Count >= BatchSize)
+            if (currentBatch.Count >= batchSize)
             {
                 await context.Users.AddRangeAsync(currentBatch);
                 await context.SaveChangesAsync();
@@ -253,6 +253,7 @@ public class UserService(ApplicationDbContext context) : IUserService
                     i++;
                     continue;
                 }
+
                 inQuotes = !inQuotes;
                 continue;
             }
@@ -285,9 +286,9 @@ public class UserService(ApplicationDbContext context) : IUserService
         }
 
         //! 3) update IsCsvSync if provided
-        if (request.IsCSVSync.HasValue)
+        if (request.IsCsvSync.HasValue)
         {
-            user.IsCSVSync = request.IsCSVSync.Value;
+            user.IsCsvSync = request.IsCsvSync.Value;
         }
 
         //! 4) update IsActive if provided
@@ -299,11 +300,11 @@ public class UserService(ApplicationDbContext context) : IUserService
         await context.SaveChangesAsync();
     }
 
-    public async Task<List<string>> GetAdminDashboardCSVUsers()
+    public async Task<List<string>> GetAdminDashboardCsvUsers()
     {
         return await context
             .Users.AsNoTracking()
-            .Where(u => u.IsAdmin == false && u.IsCSVSync == true)
+            .Where(u => u.IsAdmin == false && u.IsCsvSync == true)
             .Select(u => u.Email)
             .ToListAsync();
     }

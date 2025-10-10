@@ -2,7 +2,7 @@ using System;
 
 namespace BBB_ApplicationDashboard.Application.DTOs.Common;
 
-public class APIResponse<T>
+public class ApiResponse<T>
 {
     public bool Success { get; set; } // Did the request succeed?
     public string? Message { get; set; } // Optional message (success or error)

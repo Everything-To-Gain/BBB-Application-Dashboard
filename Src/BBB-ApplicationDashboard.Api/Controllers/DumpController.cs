@@ -1,9 +1,7 @@
-using BBB_ApplicationDashboard.Api.Controllers;
-using BBB_ApplicationDashboard.Application;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BBB_ApplicationDashboard.Api;
+namespace BBB_ApplicationDashboard.Api.Controllers;
 
 [Authorize(AuthenticationSchemes = "ApiKey")]
 public class DumpController(IDumpService dumpService) : CustomControllerBase

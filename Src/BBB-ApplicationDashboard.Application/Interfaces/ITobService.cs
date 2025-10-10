@@ -4,5 +4,5 @@ namespace BBB_ApplicationDashboard.Application.Interfaces;
 
 public interface ITobService
 {
-    public Task<List<TOB>> GetTOBs(string? searchTerm);
+    public Task<List<Tob>> GetToBs(string? searchTerm);
 }
