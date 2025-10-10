@@ -1,4 +1,4 @@
-namespace BBB_ApplicationDashboard.Application.Interfaces;
+namespace BBB_ApplicationDashboard.Application;
 
 public interface IDumpService
 {

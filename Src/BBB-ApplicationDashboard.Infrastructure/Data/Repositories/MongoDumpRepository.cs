@@ -1,14 +1,22 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
+using BBB_ApplicationDashboard.Application;
 using BBB_ApplicationDashboard.Application.Interfaces;
 using BBB_ApplicationDashboard.Domain.ValueObjects;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Options;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
-namespace BBB_ApplicationDashboard.Infrastructure.Data.Repositories;
+namespace BBB_ApplicationDashboard.Infrastructure;
 
 public class MongoDumpRepository : IMongoDumpRepository
 {
-    private readonly IMongoCollection<BsonDocument> _collection;
+    private readonly IMongoCollection<BsonDocument> collection;
 
     public MongoDumpRepository(ISecretService secretService)
     {
@@ -16,7 +24,7 @@ public class MongoDumpRepository : IMongoDumpRepository
             secretService.GetSecret(ProjectSecrets.DumpMongoDBConnection, Folders.ConnectionStrings)
         );
         var db = client.GetDatabase("default");
-        _collection = db.GetCollection<BsonDocument>("dump");
+        collection = db.GetCollection<BsonDocument>("dump");
     }
 
     public async Task InsertAsync(Dictionary<string, object> payload)
@@ -34,12 +42,12 @@ public class MongoDumpRepository : IMongoDumpRepository
         var json = JsonSerializer.Serialize(payload);
         var bsonDocument = BsonDocument.Parse(json);
 
-        await _collection.InsertOneAsync(bsonDocument);
+        await collection.InsertOneAsync(bsonDocument);
     }
 
     public async Task<List<Dictionary<string, object>>> GetAllAsync()
     {
-        var documents = await _collection.Find(FilterDefinition<BsonDocument>.Empty).ToListAsync();
+        var documents = await collection.Find(FilterDefinition<BsonDocument>.Empty).ToListAsync();
 
         var results = new List<Dictionary<string, object>>(documents.Count);
         foreach (var doc in documents)
@@ -50,7 +58,6 @@ public class MongoDumpRepository : IMongoDumpRepository
                 var value = BsonTypeMapper.MapToDotNetValue(element.Value);
                 dict[element.Name] = value;
             }
-
             results.Add(dict);
         }
 

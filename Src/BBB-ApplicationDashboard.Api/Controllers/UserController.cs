@@ -9,9 +9,9 @@ namespace BBB_ApplicationDashboard.Api.Controllers;
 public class UserController(IUserService userService) : CustomControllerBase
 {
     [HttpGet("csv-sync")]
-    public async Task<IActionResult> GetCsvUsers()
+    public async Task<IActionResult> GetCSVUsers()
     {
-        var csvUsers = await userService.GetAdminDashboardCsvUsers();
+        var csvUsers = await userService.GetAdminDashboardCSVUsers();
         return SuccessResponseWithData(csvUsers);
     }
 

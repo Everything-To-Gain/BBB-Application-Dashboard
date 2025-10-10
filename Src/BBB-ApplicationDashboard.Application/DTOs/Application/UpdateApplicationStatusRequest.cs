@@ -6,7 +6,7 @@ namespace BBB_ApplicationDashboard.Application.DTOs.Application;
 public class UpdateApplicationStatusRequest
 {
     [Required(ErrorMessage = "ApplicationId is required")]
-    public required string BlueApplicationId { get; set; }
+    public required string BlueApplicationID { get; set; }
 
     [Required(ErrorMessage = "Application status is required")]
     public required ApplicationStatusInternal ApplicationStatusInternal { get; set; }

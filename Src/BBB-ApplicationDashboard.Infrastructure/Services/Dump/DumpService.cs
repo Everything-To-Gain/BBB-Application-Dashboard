@@ -1,8 +1,10 @@
-using BBB_ApplicationDashboard.Application.Interfaces;
+using BBB_ApplicationDashboard.Application;
 using BBB_ApplicationDashboard.Infrastructure.Data.Context;
 using BBB_ApplicationDashboard.Infrastructure.Exceptions.Common;
+using Microsoft.AspNetCore.Http.HttpResults;
+using MongoDB.Bson;
 
-namespace BBB_ApplicationDashboard.Infrastructure.Services.Dump;
+namespace BBB_ApplicationDashboard.Infrastructure;
 
 public class DumpService(IMongoDumpRepository repository, ApplicationDbContext applicationDbContext)
     : IDumpService

@@ -7,7 +7,7 @@ namespace BBB_ApplicationDashboard.Infrastructure.Services.Tob;
 
 public class TobService(IMongoDatabase database) : ITobService
 {
-    public async Task<List<Domain.Entities.Tob>> GetToBs(string? searchTerm)
+    public async Task<List<TOB>> GetTOBs(string? searchTerm)
     {
         var col = database.GetCollection<BsonDocument>("tobs");
         var projection = new BsonDocument
@@ -22,6 +22,6 @@ public class TobService(IMongoDatabase database) : ITobService
             pipeline = pipeline.Match(new BsonDocument("properties.tob", regex));
         }
 
-        return await pipeline.Project<Domain.Entities.Tob>(projection).Limit(10).ToListAsync();
+        return await pipeline.Project<TOB>(projection).Limit(10).ToListAsync();
     }
 }

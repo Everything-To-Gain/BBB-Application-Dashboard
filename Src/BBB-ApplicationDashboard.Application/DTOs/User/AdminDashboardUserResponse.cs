@@ -8,5 +8,5 @@ public class AdminDashboardUserResponse
     public string? Email { get; set; }
     public bool IsActive { get; set; }
     public bool IsAdmin { get; set; }
-    public bool IsCsvSync { get; set; }
+    public bool IsCSVSync { get; set; }
 }

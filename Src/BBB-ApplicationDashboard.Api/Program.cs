@@ -35,7 +35,7 @@ public class Program
         }
         finally
         {
-            await Log.CloseAndFlushAsync();
+            Log.CloseAndFlush();
         }
     }
 }
