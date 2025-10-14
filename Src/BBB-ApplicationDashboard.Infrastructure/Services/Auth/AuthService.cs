@@ -122,6 +122,11 @@ public class AuthService(ISecretService secretService, ILogger<AuthService> logg
         var tokenEndpoint =
             $"https://login.microsoftonline.com/{microsoftTenantId}/oauth2/v2.0/token";
 
+        logger.LogInformation(
+            "Starting Microsoft token exchange. Redirect URL: {RedirectUrl}",
+            redirectUrl
+        );
+
         var body = new Dictionary<string, string>
         {
             ["client_id"] = microsoftClientId,
@@ -132,54 +137,98 @@ public class AuthService(ISecretService secretService, ILogger<AuthService> logg
             ["client_secret"] = microsoftClientSecret,
         };
 
-        HttpResponseMessage tokenResponse;
-        try
-        {
-            tokenResponse = await new HttpClient().PostAsync(
-                tokenEndpoint,
-                new FormUrlEncodedContent(body)
-            );
-        }
-        catch (Exception ex)
-        {
-            throw new UserBadRequestException($"Token endpoint request failed: {ex.Message}");
-        }
+        logger.LogDebug(
+            "Sending POST request to Microsoft token endpoint: {Endpoint}",
+            tokenEndpoint
+        );
+        var tokenResponse = await new HttpClient().PostAsync(
+            tokenEndpoint,
+            new FormUrlEncodedContent(body)
+        );
+
+        logger.LogDebug(
+            "Received response with status code: {StatusCode}",
+            tokenResponse.StatusCode
+        );
 
         if (!tokenResponse.IsSuccessStatusCode)
         {
             var err = await tokenResponse.Content.ReadAsStringAsync();
+            logger.LogWarning(
+                "Token exchange failed with status code {StatusCode}. Response: {Error}",
+                tokenResponse.StatusCode,
+                err
+            );
             throw new UserUnauthorizedException($"Failed to exchange code for tokens: {err}");
         }
 
         var tokenJson = await tokenResponse.Content.ReadAsStringAsync();
-        var tokenData =
-            JsonSerializer.Deserialize<MicrosoftTokenResponse>(tokenJson)
-            ?? throw new UserUnauthorizedException("Failed to deserialize token response");
+        logger.LogDebug("Token response received. Deserializing...");
 
+        var tokenData = JsonSerializer.Deserialize<MicrosoftTokenResponse>(tokenJson);
+        if (tokenData is null)
+        {
+            logger.LogError(
+                "Failed to deserialize Microsoft token response. Raw JSON: {Json}",
+                tokenJson
+            );
+            throw new UserUnauthorizedException("Failed to deserialize token response");
+        }
+
+        logger.LogInformation("Microsoft token exchange completed successfully.");
         return tokenData;
     }
 
     public async Task<MicrosoftUserInfo?> GetMicrosoftUserInfoAsync(string accessToken)
     {
-        var graphReq = new HttpRequestMessage(
-            HttpMethod.Get,
-            "https://graph.microsoft.com/v1.0/me"
-        );
-        graphReq.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
+        logger.LogInformation("Fetching Microsoft user info from Graph API...");
+
+        var request = new HttpRequestMessage(HttpMethod.Get, "https://graph.microsoft.com/v1.0/me");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
             "Bearer",
             accessToken
         );
 
-        var graphRes = await new HttpClient().SendAsync(graphReq);
-        if (!graphRes.IsSuccessStatusCode)
+        logger.LogDebug(
+            "Sending Graph API request with access token starting with: {TokenPrefix}",
+            accessToken[..Math.Min(10, accessToken.Length)]
+        );
+
+        var response = await new HttpClient().SendAsync(request);
+
+        logger.LogDebug(
+            "Received Graph API response with status code: {StatusCode}",
+            response.StatusCode
+        );
+
+        if (!response.IsSuccessStatusCode)
         {
-            var err = await graphRes.Content.ReadAsStringAsync();
-            logger.LogError("Failed to call Graph API: {Error}", err);
+            var err = await response.Content.ReadAsStringAsync();
+            logger.LogError(
+                "Failed to call Microsoft Graph API. Status: {StatusCode}, Response: {Error}",
+                response.StatusCode,
+                err
+            );
             return null;
         }
 
-        var graphJson = await graphRes.Content.ReadAsStringAsync();
-        var userInfo = JsonSerializer.Deserialize<MicrosoftUserInfo>(graphJson);
+        var json = await response.Content.ReadAsStringAsync();
+        logger.LogDebug("Graph API response received. Deserializing user info...");
+
+        var userInfo = JsonSerializer.Deserialize<MicrosoftUserInfo>(json);
+        if (userInfo is null)
+        {
+            logger.LogError(
+                "Failed to deserialize Microsoft Graph API user info. Raw JSON: {Json}",
+                json
+            );
+            return null;
+        }
+
+        logger.LogInformation(
+            "Successfully retrieved Microsoft user info for {User}",
+            userInfo.DisplayName ?? "Unknown User"
+        );
         return userInfo;
     }
 }

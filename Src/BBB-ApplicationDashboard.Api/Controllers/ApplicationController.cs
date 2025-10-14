@@ -70,8 +70,11 @@ public class ApplicationController(
     {
         var applicationDetails = await applicationService.GetApplicationById(applicationId);
         var request = applicationDetails.Adapt<SubmittedDataRequest>();
-        await mainServerClient.SendFormData(request, applicationDetails.ApplicationId.ToString());
-        return SuccessResponse();
+        string jobId = await mainServerClient.SendFormData(
+            request,
+            applicationDetails.ApplicationId.ToString()
+        );
+        return SuccessResponse(jobId);
     }
 
     [Authorize]

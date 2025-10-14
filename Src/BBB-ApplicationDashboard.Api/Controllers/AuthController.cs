@@ -10,7 +10,8 @@ namespace BBB_ApplicationDashboard.Api.Controllers
         IAuthService authService,
         IUserService userService,
         IJwtTokenService jwtTokenService,
-        ApplicationDbContext context
+        ApplicationDbContext context,
+        ILogger<AuthController> logger
     ) : CustomControllerBase
     {
         [HttpGet("google-login-scalar")]
@@ -90,10 +91,18 @@ namespace BBB_ApplicationDashboard.Api.Controllers
             [FromQuery] string? redirectUrl = null
         )
         {
+            logger.LogInformation(
+                "Microsoft callback initiated with code: {Code} and redirectUrl: {RedirectUrl}",
+                code,
+                redirectUrl
+            );
             //! 1. Validate Microsoft authentication
+            logger.LogInformation("Exchanging Microsoft authorization code for token...");
             var tokenData =
                 await authService.ExchangeMicrosoftCodeForTokenAsync(code, redirectUrl)
                 ?? throw new UserUnauthorizedException("Invalid microsoft token!");
+
+            logger.LogInformation("Token exchange successful. Retrieving Microsoft user info...");
 
             var userInfo =
                 await authService.GetMicrosoftUserInfoAsync(tokenData.AccessToken)
@@ -105,11 +114,14 @@ namespace BBB_ApplicationDashboard.Api.Controllers
                 ?? userInfo.UserPrincipalName
                 ?? throw new UserUnauthorizedException("Email not found in user info!");
 
+            logger.LogInformation("Looking for user with email: {Email}", email);
+
             User? user = await userService.FindUser(email);
 
             //! Don't create user
             if (user is null)
             {
+                logger.LogWarning("User with email {Email} not found. Access denied.", email);
                 return Unauthorized();
                 // user = new User() { Email = email, UserSource = Source.Internal };
                 // await userService.CreateUser(user);
@@ -117,9 +129,15 @@ namespace BBB_ApplicationDashboard.Api.Controllers
 
             //! 3. Delegate cookie and token creation to handlers
             int expirationDays = 365250;
+            logger.LogInformation(
+                "Generating JWT token for user {Email} with {Days} days expiration.",
+                email,
+                expirationDays
+            );
             var token = jwtTokenService.GenerateJwtToken(expirationDays, user);
 
             //! 4. Set cookie
+            logger.LogInformation("Setting authentication cookie for user {Email}", email);
             Response.Cookies.Append(
                 "BBBPartnersAuth",
                 token,
