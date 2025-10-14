@@ -16,6 +16,7 @@ public class UserService(ApplicationDbContext context) : IUserService
 
     public async Task CreateUser(Domain.Entities.User user)
     {
+        user.Email = user.Email.ToLowerInvariant();
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
     }
@@ -91,7 +92,7 @@ public class UserService(ApplicationDbContext context) : IUserService
     public async Task CreateAdminDashboardUser(AdminDashboardCreateUserRequest request)
     {
         //! 1) check if email is duplicate
-        var user = await FindUser(request.Email);
+        var user = await FindUser(request.Email.ToLowerInvariant());
         if (user is not null)
             throw new UserBadRequestException("User already exists");
 
@@ -99,7 +100,7 @@ public class UserService(ApplicationDbContext context) : IUserService
         var newUser = new Domain.Entities.User
         {
             UserSource = Domain.ValueObjects.Source.Internal,
-            Email = request.Email.Trim(),
+            Email = request.Email.ToLowerInvariant().Trim(),
             IsAdmin = request.IsAdmin,
             IsCSVSync = request.IsCSVSync,
         };
@@ -281,7 +282,7 @@ public class UserService(ApplicationDbContext context) : IUserService
         //! 2) update email if provided
         if (!string.IsNullOrEmpty(request.Email))
         {
-            user.Email = request.Email;
+            user.Email = request.Email.ToLowerInvariant();
         }
 
         //! 3) update IsCsvSync if provided

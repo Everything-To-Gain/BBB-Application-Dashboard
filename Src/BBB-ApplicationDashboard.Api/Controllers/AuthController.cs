@@ -36,7 +36,7 @@ namespace BBB_ApplicationDashboard.Api.Controllers
                 ?? throw new UserUnauthorizedException("Email is not verified!");
 
             //! 2. Find user
-            User? user = await userService.FindUser(payload.Email.ToLower());
+            User? user = await userService.FindUser(payload.Email.ToLowerInvariant());
 
             //! Don't create user
             if (user is null)
@@ -110,7 +110,7 @@ namespace BBB_ApplicationDashboard.Api.Controllers
 
             //! 2. Find user by email
             string email =
-                userInfo.Mail.ToLower()
+                userInfo.Mail.ToLowerInvariant()
                 ?? userInfo.UserPrincipalName
                 ?? throw new UserUnauthorizedException("Email not found in user info!");
 
