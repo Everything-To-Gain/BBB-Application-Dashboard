@@ -4,6 +4,7 @@ using BBB_ApplicationDashboard.Infrastructure;
 using BBB_ApplicationDashboard.Infrastructure.Data.Repositories;
 using BBB_ApplicationDashboard.Infrastructure.Services.Audit;
 using BBB_ApplicationDashboard.Infrastructure.Services.Clients;
+using BBB_ApplicationDashboard.Infrastructure.Services.Cloudinary;
 using BBB_ApplicationDashboard.Infrastructure.Services.N8n;
 using Microsoft.AspNetCore.Authentication;
 
@@ -205,6 +206,7 @@ public static class WebApplicationExtension
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IMongoN8NAuditLogsRepository, MongoN8NAuditLogsRepository>();
         services.AddScoped<IN8NAuditService, N8NAuditService>();
+        services.AddScoped<ICloudinaryService, CloudinaryService>();
 
         //? Client Services
         services.AddScoped<IMainServerClient, MainServerClient>();

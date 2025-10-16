@@ -13,4 +13,7 @@ public enum ProjectSecrets
     PartnersGoogleClientId,
     PartnersGoogleClientSecret,
     DumpMongoDBConnection,
+    CloudinaryApiKey,
+    CloudinaryApiSecret,
+    CloudinaryCloudname
 }
