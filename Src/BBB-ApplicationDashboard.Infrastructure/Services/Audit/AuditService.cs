@@ -70,6 +70,9 @@ namespace BBB_ApplicationDashboard.Infrastructure.Services.Audit
                 query = query.Where(a => (a.EntityIdentifier ?? string.Empty).Contains(searchTerm));
             }
 
+            if (!string.IsNullOrEmpty(request.UserVersion))
+                query = query.Where(ae => ae.UserVersion == request.UserVersion);
+
             var count = await query.CountAsync();
             int pageIndex = request.PageNumber - 1;
             int pageSize = Math.Max(1, Math.Min(100, request.PageSize));
@@ -88,6 +91,7 @@ namespace BBB_ApplicationDashboard.Infrastructure.Services.Audit
                     EntityIdentifier = ae.EntityIdentifier,
                     Status = ae.Status,
                     UserVersion = ae.UserVersion,
+
                 })
                 .ToListAsync();
             return new PaginatedResponse<SimpleAuditResponse>(pageIndex, pageSize, count, audits);
