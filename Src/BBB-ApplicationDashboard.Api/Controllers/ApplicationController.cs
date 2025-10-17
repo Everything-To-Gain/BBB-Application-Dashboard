@@ -8,7 +8,8 @@ namespace BBB_ApplicationDashboard.Api.Controllers;
 
 public class ApplicationController(
     IApplicationService applicationService,
-    IMainServerClient mainServerClient
+    IMainServerClient mainServerClient,
+    ILogger<ApplicationController> logger
 ) : CustomControllerBase
 {
     [Authorize]
@@ -22,18 +23,47 @@ public class ApplicationController(
     [HttpPost("submit-form")]
     public async Task<IActionResult> SubmitApplicationForm(SubmittedDataRequest request)
     {
-        //!1)Create application in database
+        logger.LogInformation(
+            "📨 Received application submission request for applicant: {ApplicantEmail}",
+            request.SubmittedByName
+        );
+
+        // 1️⃣ Create application in database
+        logger.LogInformation("🗂️ Creating application in database...");
         var accreditationResponse = await applicationService.CreateApplicationAsync(request);
-        //!2)send to main server
+        logger.LogInformation(
+            "✅ Application created with ID: {ApplicationId}",
+            accreditationResponse.ApplicationId
+        );
+
+        // 2️⃣ Send data to main server
+        logger.LogInformation(
+            "🌐 Sending form data to main server for Application ID: {ApplicationId}",
+            accreditationResponse.ApplicationId
+        );
         await mainServerClient.SendFormData(
             request,
             accreditationResponse.ApplicationId.ToString()
         );
+        logger.LogInformation(
+            "✅ Successfully sent form data to main server for Application ID: {ApplicationId}",
+            accreditationResponse.ApplicationId
+        );
+
+        // 3️⃣ Return success response
+        var message = accreditationResponse.IsDuplicate
+            ? "Duplicate application detected. Email sent with existing application details."
+            : "Application submitted successfully and confirmation email sent";
+
+        logger.LogInformation(
+            "📤 Returning success response for Application ID: {ApplicationId}. Message: {Message}",
+            accreditationResponse.ApplicationId,
+            message
+        );
+
         return SuccessResponseWithData(
             data: new { applicationId = accreditationResponse.ApplicationId },
-            message: accreditationResponse.IsDuplicate
-                ? "Duplicate application detected. Email sent with existing application details."
-                : "Application submitted successfully and confirmation email sent"
+            message: message
         );
     }
 

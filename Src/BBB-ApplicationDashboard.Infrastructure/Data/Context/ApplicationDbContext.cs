@@ -28,8 +28,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .Property(a => a.SocialMediaLinks)
             .HasConversion(
                 v => JsonSerializer.Serialize(v, options), // serialize before save
-                v => JsonSerializer.Deserialize<List<string>>(v, options) ??
-                     new List<string>() // deserialize after load
+                v => JsonSerializer.Deserialize<List<string>>(v, options) ?? new List<string>() // deserialize after load
             )
             .HasColumnType("jsonb");
 
@@ -61,9 +60,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             )
             .HasColumnType("jsonb");
 
-        modelBuilder.Entity<Accreditation>().HasIndex(a => a.ApplicationNumber).IsUnique();
+        modelBuilder.Entity<Accreditation>().HasIndex(a => a.ApplicationNumber);
 
-        modelBuilder.Entity<ActivityEvent>().Property(ae => ae.SyncSource).HasDefaultValue("OnlineSync");
+        modelBuilder
+            .Entity<ActivityEvent>()
+            .Property(ae => ae.SyncSource)
+            .HasDefaultValue("OnlineSync");
         modelBuilder.Entity<ActivityEvent>().Property(ae => ae.Env).HasDefaultValue("Production");
     }
 }
